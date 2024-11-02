@@ -43,6 +43,8 @@ def test_server_start(tmp_path: Path) -> None:
 
 def test_server_missing_docs(tmp_path: Path) -> None:
     """Test server behavior with missing documentation."""
+    # temp
+    assert not tmp_path.exists()
     with pytest.raises(FileNotFoundError):
         server.serve_docs(tmp_path)
 
