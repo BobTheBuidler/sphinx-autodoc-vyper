@@ -43,10 +43,11 @@ def test_server_start(tmp_path: Path) -> None:
 
 def test_server_missing_docs(tmp_path: Path) -> None:
     """Test server behavior with missing documentation."""
+    missing_path = tmp_path / "non-existant-dir"
     # temp
-    assert not tmp_path.exists()
+    assert not missing_path.exists()
     with pytest.raises(FileNotFoundError):
-        server.serve_docs(tmp_path)
+        server.serve_docs(missing_path)
 
 
 def _get_free_port() -> int:
