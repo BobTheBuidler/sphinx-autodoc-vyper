@@ -16,7 +16,7 @@ def test_cli_basic(contracts_dir: Path, output_dir: Path, monkeypatch, capsys) -
     )
 
     # Run CLI
-    main()
+    cli.main()
 
     # Check output
     captured = capsys.readouterr()
