@@ -14,7 +14,7 @@ setup(
             "requests>=2.0.0",  # For testing server
         ]
     },
-    entry_points={"console_scripts": ["vyper-docs=vyper_sphinx_docs.cli:main"]},
+    entry_points={"console_scripts": ["vyper-docs=sphinx_autodoc_vyper.cli:main"]},
     author="Vyper Developer",
     description="Sphinx documentation generator for Vyper smart contracts",
     long_description=open("README.md").read(),

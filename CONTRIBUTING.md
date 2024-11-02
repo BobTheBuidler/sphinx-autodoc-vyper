@@ -36,7 +36,7 @@ tox -e type  # Run type checking
 
 # Run pytest directly during development
 pytest
-pytest --cov=vyper_sphinx_docs
+pytest --cov=sphinx_autodoc_vyper
 ```
 
 ### Test Environments
@@ -51,28 +51,28 @@ The project uses several tools to maintain code quality:
 
 - **Black**: Code formatting
   ```bash
-  black vyper_sphinx_docs tests
+  black sphinx_autodoc_vyper tests
   ```
 
 - **isort**: Import sorting
   ```bash
-  isort vyper_sphinx_docs tests
+  isort sphinx_autodoc_vyper tests
   ```
 
 - **Ruff**: Fast Python linter
   ```bash
-  ruff check vyper_sphinx_docs tests
+  ruff check sphinx_autodoc_vyper tests
   ```
 
 - **mypy**: Static type checking
   ```bash
-  mypy vyper_sphinx_docs tests
+  mypy sphinx_autodoc_vyper tests
   ```
 
 ## Project Structure
 
 ```
-vyper_sphinx_docs/
+sphinx_autodoc_vyper/
 ├── __init__.py         # Package initialization
 ├── cli.py             # Command-line interface
 ├── generator.py       # Sphinx documentation generator

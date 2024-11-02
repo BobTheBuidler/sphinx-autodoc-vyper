@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.scripts]
-vyper-docs = "vyper_sphinx_docs.cli:main"
+vyper-docs = "sphinx_autodoc_vyper.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/yourusername/vyper-sphinx-docs"
@@ -48,7 +48,7 @@ Repository = "https://github.com/yourusername/vyper-sphinx-docs.git"
 Documentation = "https://github.com/yourusername/vyper-sphinx-docs#readme"
 
 [tool.hatch.build.targets.wheel]
-packages = ["vyper_sphinx_docs"]
+packages = ["sphinx_autodoc_vyper"]
 
 [tool.black]
 line-length = 88
@@ -74,5 +74,5 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=vyper_sphinx_docs"
+addopts = "-ra -q --cov=sphinx_autodoc_vyper"
 testpaths = ["tests"]
