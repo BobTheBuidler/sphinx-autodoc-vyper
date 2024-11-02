@@ -2,11 +2,12 @@
 
 import os
 import pytest
+from pathlib import Path
 from sphinx_autodoc_vyper.generator import SphinxGenerator
 from sphinx_autodoc_vyper.parser import VyperParser
 
 
-def test_sphinx_generation(contracts_dir, output_dir):
+def test_sphinx_generation(contracts_dir: Path, output_dir: Path) -> None:
     """Test complete Sphinx documentation generation."""
     # Parse contracts
     parser = VyperParser(str(contracts_dir))
@@ -44,7 +45,7 @@ def test_sphinx_generation(contracts_dir, output_dir):
     assert "balance_of" in token_content
 
 
-def test_contract_rst_generation(contracts_dir, output_dir):
+def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     """Test detailed RST file generation for contracts."""
     parser = VyperParser(str(contracts_dir))
     contracts = parser.parse_contracts()

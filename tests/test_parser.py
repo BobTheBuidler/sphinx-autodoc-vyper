@@ -1,10 +1,11 @@
 """Tests for the Vyper contract parser."""
 
 import pytest
+from pathlib import Path
 from sphinx_autodoc_vyper.parser import VyperParser, Contract, Function, Parameter
 
 
-def test_parse_contracts(contracts_dir):
+def test_parse_contracts(contracts_dir: Path) -> None:
     """Test parsing multiple contracts."""
     parser = VyperParser(str(contracts_dir))
     contracts = parser.parse_contracts()
@@ -14,7 +15,7 @@ def test_parse_contracts(contracts_dir):
     assert any(c.name == "nested_token" for c in contracts)
 
 
-def test_contract_parsing(contracts_dir):
+def test_contract_parsing(contracts_dir: Path) -> None:
     """Test detailed contract parsing."""
     parser = VyperParser(str(contracts_dir))
     contracts = parser.parse_contracts()
@@ -45,7 +46,7 @@ def test_contract_parsing(contracts_dir):
     assert "Get the token balance" in balance_func.docstring
 
 
-def test_parameter_parsing(contracts_dir):
+def test_parameter_parsing(contracts_dir: Path) -> None:
     """Test function parameter parsing."""
     parser = VyperParser(str(contracts_dir))
     contracts = parser.parse_contracts()
@@ -66,7 +67,7 @@ def test_parameter_parsing(contracts_dir):
     assert amount_param.type == "uint256"
 
 
-def test_empty_contract(tmp_path):
+def test_empty_contract(tmp_path: Path) -> None:
     """Test parsing an empty contract."""
     contracts_dir = tmp_path / "contracts"
     contracts_dir.mkdir()

@@ -9,7 +9,7 @@ from .generator import SphinxGenerator
 from .server import serve_docs
 
 
-def main():
+def main() -> None:
     """Main entry point for the CLI."""
     parser = argparse.ArgumentParser(
         description="Generate Sphinx documentation for Vyper contracts"

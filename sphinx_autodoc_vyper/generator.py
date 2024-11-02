@@ -5,23 +5,17 @@ from typing import List
 from .parser import Contract
 
 
-class SphinxGenerator:
-    """Generate Sphinx documentation for Vyper contracts."""
+INDEX_RST = """Vyper Smart Contracts Documentation
+================================
 
-    def __init__(self, output_dir: str):
-        self.output_dir = output_dir
-        self.docs_dir = os.path.join(output_dir, "docs")
-        os.makedirs(self.docs_dir, exist_ok=True)
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-    def generate(self, contracts: List[Contract]):
-        """Generate Sphinx documentation."""
-        self._generate_conf_py()
-        self._generate_index_rst(contracts)
-        self._generate_contract_docs(contracts)
+"""
 
-    def _generate_conf_py(self):
-        """Generate Sphinx configuration file."""
-        conf_content = """# Configuration file for Sphinx documentation
+
+CONF_CONTENT = """# Configuration file for Sphinx documentation
 
 project = 'Vyper Smart Contracts'
 copyright = '2023'
@@ -39,26 +33,37 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 """
+
+
+class SphinxGenerator:
+    """Generate Sphinx documentation for Vyper contracts."""
+
+    def __init__(self, output_dir: str):
+        self.output_dir = output_dir
+        self.docs_dir = os.path.join(output_dir, "docs")
+        os.makedirs(self.docs_dir, exist_ok=True)
+
+    def generate(self, contracts: List[Contract]) -> None:
+        """Generate Sphinx documentation."""
+        self._generate_conf_py()
+        self._generate_index_rst(contracts)
+        self._generate_contract_docs(contracts)
+
+    def _generate_conf_py(self) -> None:
+        """Generate Sphinx configuration file."""
         with open(os.path.join(self.docs_dir, "conf.py"), "w", encoding="utf-8") as f:
-            f.write(conf_content)
+            f.write(CONF_CONTENT)
 
-    def _generate_index_rst(self, contracts: List[Contract]):
+    def _generate_index_rst(self, contracts: List[Contract]) -> None:
         """Generate index.rst file."""
-        content = """Vyper Smart Contracts Documentation
-================================
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-"""
+        content = INDEX_RST
         for contract in contracts:
             content += f"   {contract.name}\n"
 
         with open(os.path.join(self.docs_dir, "index.rst"), "w", encoding="utf-8") as f:
             f.write(content)
 
-    def _generate_contract_docs(self, contracts: List[Contract]):
+    def _generate_contract_docs(self, contracts: List[Contract]) -> None:
         """Generate documentation for each contract."""
         for contract in contracts:
             content = f"""{contract.name}

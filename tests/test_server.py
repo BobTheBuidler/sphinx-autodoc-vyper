@@ -5,10 +5,11 @@ import socket
 import threading
 import time
 import requests
+from pathlib import Path
 from sphinx_autodoc_vyper.server import serve_docs
 
 
-def test_server_start(tmp_path):
+def test_server_start(tmp_path: Path) -> None:
     """Test server startup and accessibility."""
     # Create mock build directory
     build_dir = tmp_path / "docs" / "_build" / "html"
@@ -33,13 +34,13 @@ def test_server_start(tmp_path):
         pass
 
 
-def test_server_missing_docs(tmp_path):
+def test_server_missing_docs(tmp_path: Path) -> None:
     """Test server behavior with missing documentation."""
     with pytest.raises(FileNotFoundError):
         serve_docs()
 
 
-def _get_free_port():
+def _get_free_port() -> int:
     """Get an available port number."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("", 0))

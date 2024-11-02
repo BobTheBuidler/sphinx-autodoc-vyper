@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 @pytest.fixture
-def sample_contract():
+def sample_contract() -> str:
     """Sample Vyper contract content."""
     return '''"""
 ERC20 Token Implementation
@@ -43,7 +43,7 @@ def balance_of(account: address) -> uint256:
 
 
 @pytest.fixture
-def contracts_dir(tmp_path, sample_contract):
+def contracts_dir(tmp_path: Path, sample_contract: str) -> Path:
     """Create a temporary directory with sample contracts."""
     contracts = tmp_path / "contracts"
     contracts.mkdir()
@@ -62,7 +62,7 @@ def contracts_dir(tmp_path, sample_contract):
 
 
 @pytest.fixture
-def output_dir(tmp_path):
+def output_dir(tmp_path: Path) -> Path:
     """Create a temporary output directory."""
     output = tmp_path / "output"
     output.mkdir()

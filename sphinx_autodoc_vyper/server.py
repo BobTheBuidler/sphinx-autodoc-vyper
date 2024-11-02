@@ -5,9 +5,10 @@ import socketserver
 import os
 import webbrowser
 from pathlib import Path
+from typing import NoReturn
 
 
-def serve_docs(port: int = 8000):
+def serve_docs(port: int = 8000) -> NoReturn:
     """Serve the documentation on a local development server."""
     build_dir = Path("docs/_build/html")
 
