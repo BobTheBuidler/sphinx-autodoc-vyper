@@ -19,7 +19,7 @@ def test_server_start(tmp_path: Path) -> None:
     (build_dir / "index.html").write_text("<html><body>Test</body></html>")
 
     # Generate documentation
-    cli._main(contracts_dir="", output_dir=str(build_dir), serve=False)
+    cli._main(contracts_dir="", output_dir=str(build_dir))
 
     # Start server in a thread
     port = _get_free_port()

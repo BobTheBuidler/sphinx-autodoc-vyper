@@ -35,13 +35,12 @@ def main() -> None:
     args = parser.parse_args()
     _main(args.contracts_dir, args.output, args.serve, args.port)
 
+    # Serve documentation if requested
+    if args.serve:
+        serve_docs(build_dir, port=args.port)
 
-def _main(
-    contracts_dir: str, 
-    output_dir: str, 
-    serve: bool, 
-    port: Optional[int] = None,
-) -> None:
+
+def _main(contracts_dir: str, output_dir: str) -> None:
     # Parse contracts
     vyper_parser = VyperParser(Path(contracts_dir))
     contracts = vyper_parser.parse_contracts()
@@ -58,7 +57,3 @@ def _main(
     )
 
     print(f"Documentation built successfully in {build_dir}/html")
-
-    # Serve documentation if requested
-    if serve:
-        serve_docs(build_dir, port=port)
