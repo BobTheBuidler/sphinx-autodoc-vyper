@@ -2,12 +2,7 @@
 
 from pathlib import Path
 
-from sphinx_autodoc_vyper.generator import (
-    SphinxGenerator,
-    generate_constant_doc,
-    generate_enum_doc,
-    generate_event_doc,
-)
+from sphinx_autodoc_vyper.generator import SphinxGenerator
 from sphinx_autodoc_vyper.parser import (
     Constant,
     Contract,
@@ -93,17 +88,15 @@ def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
 def test_generate_enum_doc() -> None:
     """Test documentation generation for Enum."""
     enum = Enum(name="Status", values=["PENDING", "COMPLETED"])
-    generated_doc = generate_enum_doc(enum)
     expected_doc = ".. py:enum:: Status\n   :members:\n\n   PENDING\n   COMPLETED\n"
-    assert generated_doc == expected_doc
+    assert enum.generate_docs() == expected_doc
 
 
 def test_generate_constant_doc() -> None:
     """Test documentation generation for Constant."""
     constant = Constant(name="MAX_SUPPLY", type="uint256", value="1000000")
-    generated_doc = generate_constant_doc(constant)
     expected_doc = ".. py:data:: MAX_SUPPLY\n\n   :type: uint256\n   :value: 1000000\n"
-    assert generated_doc == expected_doc
+    assert constant.generate_docs() == expected_doc
 
 
 def test_generate_variable_doc() -> None:
@@ -145,14 +138,13 @@ def test_generate_event_doc() -> None:
             Parameter(name="value", type="uint256"),
         ],
     )
-    generated_doc = generate_event_doc(event)
     expected_doc = (
         ".. py:event:: Transfer\n\n"
         "   :param address from: \n"
         "   :param address to: \n"
         "   :param uint256 value: \n"
     )
-    assert generated_doc == expected_doc
+    assert event.generate_docs() == expected_doc
 
 
 def test_generate_docs_for_contract_with_functions_and_structs() -> None:

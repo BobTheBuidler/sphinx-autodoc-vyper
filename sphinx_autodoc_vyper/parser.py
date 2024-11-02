@@ -30,6 +30,12 @@ class Enum:
     name: str
     values: List[str]
 
+    def generate_docs(self) -> str:
+        content = f".. py:class:: {self.name}\n\n"
+        for value in self.values:
+            content += f"   .. py:attribute:: {value}\n\n"
+        return content
+
 
 @dataclass
 class Constant:
@@ -42,6 +48,9 @@ class Constant:
     def __post_init__(self) -> None:
         if self.type is not None and self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
+
+    def generate_docs(self) -> str:
+        return f".. py:data:: {self.name}\n\n   {self.type}: {self.value}\n\n"
 
 
 @dataclass
@@ -139,6 +148,14 @@ class Event:
 
     name: str
     params: List[EventParameter]
+
+    def generate_docs(self) -> str:
+        content = f".. py:class:: {event.name}\n\n"
+        for field in event.fields:
+            type_str = f"indexed({field.type})" if field.indexed else field.type
+            content += f"   .. py:attribute:: {field.name}\n\n"
+            content += f"      {type_str}\n\n"
+        return content
 
 
 @dataclass
