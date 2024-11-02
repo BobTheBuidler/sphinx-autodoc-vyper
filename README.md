@@ -25,28 +25,28 @@ pip install "sphinx-autodoc-vyper[dev]"
 
 1. Generate documentation:
 ```bash
-vyper-docs /path/to/contracts
+sphinx-autodoc-vyper /path/to/contracts
 ```
 
 2. Generate and serve documentation:
 ```bash
-vyper-docs /path/to/contracts --serve
+sphinx-autodoc-vyper /path/to/contracts --serve
 ```
 
 ## Usage
 
 ```bash
 # Basic usage
-vyper-docs /path/to/contracts
+sphinx-autodoc-vyper /path/to/contracts
 
 # Specify custom output directory
-vyper-docs /path/to/contracts -o /path/to/output
+sphinx-autodoc-vyper /path/to/contracts -o /path/to/output
 
 # Generate and serve documentation on port 8000
-vyper-docs /path/to/contracts --serve
+sphinx-autodoc-vyper /path/to/contracts --serve
 
 # Specify custom port
-vyper-docs /path/to/contracts --serve --port 8080
+sphinx-autodoc-vyper /path/to/contracts --serve --port 8080
 ```
 
 ## Example

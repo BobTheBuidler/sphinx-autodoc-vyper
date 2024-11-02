@@ -12,7 +12,7 @@ def test_cli_basic(contracts_dir: Path, output_dir: Path, monkeypatch, capsys) -
     # Mock sys.argv
     monkeypatch.setattr(
         "sys.argv",
-        ["vyper-docs", str(contracts_dir), "--output", str(output_dir)],
+        ["sphinx-autodoc-vyper", str(contracts_dir), "--output", str(output_dir)],
     )
 
     # Run CLI
@@ -42,7 +42,7 @@ def test_cli_invalid_contracts_dir(tmp_path: Path, monkeypatch, capsys) -> None:
     invalid_dir = tmp_path / "nonexistent"
 
     # Mock sys.argv
-    monkeypatch.setattr("sys.argv", ["vyper-docs", str(invalid_dir)])
+    monkeypatch.setattr("sys.argv", ["sphinx-autodoc-vyper", str(invalid_dir)])
 
     # Run CLI and check for error
     with pytest.raises(FileNotFoundError) as e:

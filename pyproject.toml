@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.scripts]
-vyper-docs = "sphinx_autodoc_vyper.cli:main"
+sphinx-autodoc-vyper = "sphinx_autodoc_vyper.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/BobTheBuidler/sphinx-autodoc-vyper"
