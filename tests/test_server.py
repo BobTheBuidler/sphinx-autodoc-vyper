@@ -42,7 +42,7 @@ def test_server_start(tmp_path: Path) -> None:
 def test_server_missing_docs(tmp_path: Path) -> None:
     """Test server behavior with missing documentation."""
     with pytest.raises(FileNotFoundError):
-        server.serve_docs()
+        server.serve_docs(tmp_path)
 
 
 def _get_free_port() -> int:

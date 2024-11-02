@@ -52,4 +52,4 @@ def main() -> None:
 
     # Serve documentation if requested
     if args.serve:
-        serve_docs(args.port)
+        serve_docs(build_dir, port=args.port)
