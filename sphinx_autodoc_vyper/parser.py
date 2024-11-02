@@ -51,7 +51,9 @@ class DynArray:
         if self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
 
+
 Type = Union[str, Tuple, DynArray]
+
 
 @dataclass
 class Parameter:
