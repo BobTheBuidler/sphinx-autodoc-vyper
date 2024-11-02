@@ -100,7 +100,7 @@ class SphinxGenerator:
 
     @staticmethod
     def _generate_struct_docs(struct: Struct) -> str:
-        content = f".. py:class:: {func.name}\n\n"
+        content = f".. py:class:: {struct.name}\n\n"
         for field in struct.fields:
             content += f"   .. py:attribute:: {struct.name}.{field.name}\n\n"
             content += f"      {field.type}"

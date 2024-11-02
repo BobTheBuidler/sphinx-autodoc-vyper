@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from sphinx_autodoc_vyper.generator import SphinxGenerator
-from sphinx_autodoc_vyper.parser import VyperParser
+from sphinx_autodoc_vyper.parser import Parameter, Struct, VyperParser
 
 
 def test_sphinx_generation(contracts_dir: Path, output_dir: Path) -> None:
