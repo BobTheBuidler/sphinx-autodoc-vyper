@@ -13,6 +13,11 @@ valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
 VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "String"}
 
+CONSTANT_PATTERN = r"(\w+):\s*constant\((\w+)\)\s*=\s*(.*?)$"
+STRUCT_PATTERN = r"struct\s+(\w+)\s*{([^}]*)}"
+FUNCTION_PATTERN = r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
+PARAM_PATTERN = r"(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)"
+
 
 @dataclass
 class Constant:
@@ -164,26 +169,33 @@ class VyperParser:
         match = re.search(r'^"""(.*?)"""', content, re.DOTALL | re.MULTILINE)
         return match.group(1).strip() if match else None
 
+    def _extract_constants(self, content: str) -> List[Constant]:
+        """Extract constants from the contract."""
+        return [
+            Constant(
+                name=match.group(1).strip(),
+                type=match.group(2).strip(),
+                value=match.group(3).strip(),
+            )
+            for match in re.finditer(CONSTANT_PATTERN, content, re.MULTILINE)
+        ]
+
     def _extract_structs(self, content: str) -> List[Struct]:
         """Extract all structs from the contract."""
-        structs = []
-        struct_pattern = r"struct\s+(\w+)\s*{([^}]*)}"
-
-        for match in re.finditer(struct_pattern, content):
-            name = match.group(1).strip()
-            fields_str = match.group(2).strip()
-            fields = self._parse_params(fields_str)
-            structs.append(Struct(name=name, fields=fields))
-
-        return structs
+        return [
+            Struct(
+                name=match.group(1).strip(),
+                fields=self._parse_params(match.group(2).strip()),
+            )
+            for match in re.finditer(STRUCT_PATTERN, content)
+        ]
 
     def _extract_functions(self, content: str) -> List[Function]:
         """Extract all functions from the contract, with @external functions listed first."""
         external_functions = []
         internal_functions = []
-        function_pattern = r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
 
-        for match in re.finditer(function_pattern, content):
+        for match in re.finditer(FUNCTION_PATTERN, content):
             decorator = match.group(1).strip()
             name = match.group(2).strip()
             params_str = match.group(3).strip()
@@ -216,8 +228,7 @@ class VyperParser:
 
         params = []
         # Use regex to split by commas that are not within brackets
-        param_pattern = r"(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)"
-        for param in re.finditer(param_pattern, params_str):
+        for param in re.finditer(PARAM_PATTERN, params_str):
             name, type_str = param.group().split(":")
             type_str = type_str.strip()
             typ = Tuple(type_str[1:-1].split(",")) if type_str[1] == "(" else type_str
