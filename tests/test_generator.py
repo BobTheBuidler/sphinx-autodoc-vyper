@@ -141,7 +141,7 @@ def test_generate_docs_for_contract_with_functions_and_structs() -> None:
     expected_docs = (
         ".. py:class:: MyStruct\n\n"
         "   .. py:attribute:: MyStruct.field1\n\n"
-        "      uint256\n"
+        "      uint256\n\n"
         "   .. py:attribute:: MyStruct.field2\n\n"
         "      address\n\n"
         ".. py:function:: transfer(to: address, amount: uint256) -> bool\n\n"

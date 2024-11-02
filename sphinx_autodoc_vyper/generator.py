@@ -103,5 +103,5 @@ class SphinxGenerator:
         content = f".. py:class:: {struct.name}\n\n"
         for field in struct.fields:
             content += f"   .. py:attribute:: {struct.name}.{field.name}\n\n"
-            content += f"      {field.type}"
+            content += f"      {field.type}\n\n"
         return content
