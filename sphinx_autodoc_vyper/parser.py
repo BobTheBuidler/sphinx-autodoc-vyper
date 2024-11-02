@@ -38,7 +38,7 @@ class Tuple:
         for type in self.types:
             if type not in VALID_VYPER_TYPES:
                 logger.warning(f"{self} is not a valid Vyper type")
-    
+
     def __len__(self) -> int:
         return len(self.types)
 
