@@ -51,13 +51,14 @@ class DynArray:
         if self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
 
+Type = Union[str, Tuple, DynArray]
 
 @dataclass
 class Parameter:
     """Function parameter representation."""
 
     name: str
-    type: str
+    type: Type
 
     def __post_init__(self) -> None:
         if self.type.startswith("DynArray"):
@@ -67,7 +68,7 @@ class Parameter:
                 self.type = DynArray(type, int(max_length))
             except ValueError:
                 # TODO: include type and value info
-                constant = Constant(name=max_length.strip(), type=None, value=None)
+                constant = Constant(name=max_length.strip(), type=None, value=None)  # type: ignore [arg-type]
                 self.type = DynArray(type, constant)
         elif self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
@@ -87,7 +88,7 @@ class Function:
 
     name: str
     params: List[Parameter]
-    return_type: Optional[str]
+    return_type: Optional[Type]
     docstring: Optional[str]
 
     def __post_init__(self) -> None:
