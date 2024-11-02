@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-valid_ints = {f"int{8 * i}" for i in range(1, 32)}
-valid_uints = {f"uint{8 * i}" for i in range(1, 32)}
+valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
+valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
 VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "bytes32", "string"}
 
 @dataclass
