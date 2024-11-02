@@ -82,3 +82,36 @@ def test_empty_contract(tmp_path: Path) -> None:
     assert contracts[0].name == "empty"
     assert contracts[0].docstring is None
     assert len(contracts[0].functions) == 0
+
+
+def test_extract_contract_docstring():
+    """Test contract docstring extraction."""
+    content = '''"""
+    This is a contract docstring.
+    """
+    @external
+    def foo() -> bool:
+        pass
+    '''
+    parser = VyperParser(Path("."))
+    docstring = parser._extract_contract_docstring(content)
+    assert docstring == "This is a contract docstring."
+
+
+def test_extract_structs():
+    """Test struct extraction from contract."""
+    content = """
+    struct MyStruct {
+        field1: uint256
+        field2: address
+    }
+    """
+    parser = VyperParser(Path("."))
+    structs = parser._extract_structs(content)
+    assert len(structs) == 1
+    assert structs[0].name == "MyStruct"
+    assert len(structs[0].fields) == 2
+    assert structs[0].fields[0].name == "field1"
+    assert structs[0].fields[0].type == "uint256"
+    assert structs[0].fields[1].name == "field2"
+    assert structs[0].fields[1].type == "address"

@@ -73,3 +73,22 @@ def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     # Check docstrings
     assert "Transfer tokens to a specified address" in content
     assert "Get the token balance of an account" in content
+
+
+def test_generate_struct_docs():
+    """Test struct documentation generation."""
+    struct = Struct(
+        name="MyStruct",
+        fields=[
+            Parameter(name="field1", type="uint256"),
+            Parameter(name="field2", type="address"),
+        ],
+    )
+    expected_output = (
+        ".. py:class:: MyStruct\n\n"
+        "   .. py:attribute:: MyStruct.field1\n\n"
+        "      uint256\n"
+        "   .. py:attribute:: MyStruct.field2\n\n"
+        "      address"
+    )
+    assert SphinxGenerator._generate_struct_docs(struct) == expected_output
