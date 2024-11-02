@@ -150,7 +150,8 @@ class Contract:
     structs: List[Struct]
     events: List[Event]
     constants: List[Constant]
-    functions: List[Function]
+    external_functions: List[Function]
+    internal_functions: List[Function]
 
 
 Functions = typing.Tuple[List[Function], List[Function]]
