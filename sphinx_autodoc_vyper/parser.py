@@ -119,14 +119,16 @@ class VyperParser:
         # Combine external and internal functions, with external functions first
         return external_functions + internal_functions
 
-    def _parse_params(self, params_str: str) -> List[Parameter]:
+    @staticmethod
+    def _parse_params(params_str: str) -> List[Parameter]:
         """Parse function parameters."""
         if not params_str:
             return []
 
         params = []
-        for param in params_str.split(","):
-            if ":" in param:
-                name, type_str = param.split(":")
-                params.append(Parameter(name=name.strip(), type=type_str.strip()))
+        # Use regex to split by commas that are not within brackets
+        param_pattern = r'(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)'
+        for param in re.finditer(param_pattern, params_str):
+            name, type_str = param.group().split(":")
+            params.append(Parameter(name=name.strip(), type=type_str.strip()))
         return params
