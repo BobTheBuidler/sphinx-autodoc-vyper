@@ -27,6 +27,16 @@ class Constant:
 
 
 @dataclass
+class Tuple:
+    types: List[str]
+
+    def __post_init__(self) -> None:
+        for type in self.types:
+            if type not in VALID_VYPER_TYPES:
+                raise ValueError(f"{self} is not a valid Vyper type")
+
+
+@dataclass
 class DynArray:
     """Dynamic length array representation."""
 
@@ -47,7 +57,16 @@ class Parameter:
     type: str
 
     def __post_init__(self) -> None:
-        if self.type not in VALID_VYPER_TYPES:
+        if self.type.startswith("DynArray"):
+            assert self.type.endswith("]")
+            type, max_length = self.type[:-1].split('[')[1].split(",")
+            try:
+                self.type = DynArray(type, int(max_length))
+            except ValueError:
+                # TODO: include type and value info
+                constant = Constant(name=max_length.strip(), type=None, value=None)
+                self.type = DynArray(type, constant)
+        elif self.type not in VALID_VYPER_TYPES:
             raise ValueError(f"{self} is not a valid Vyper type")
 
 
@@ -69,8 +88,9 @@ class Function:
     docstring: Optional[str]
 
     def __post_init__(self) -> None:
-        if self.return_type is not None and self.return_type not in VALID_VYPER_TYPES:
-            raise ValueError(f"{self} does not return a valid Vyper type")
+        if self.return_type is not None and not isinstance(self.return_type, Tuple):
+            if self.return_type not in VALID_VYPER_TYPES:
+                raise ValueError(f"{self} does not return a valid Vyper type")
 
 @dataclass
 class Contract:
@@ -185,5 +205,10 @@ class VyperParser:
         param_pattern = r'(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)'
         for param in re.finditer(param_pattern, params_str):
             name, type_str = param.group().split(":")
-            params.append(Parameter(name=name.strip(), type=type_str.strip()))
+            type_str = type_str.strip()
+            if type_str[1] == "(":
+                typ = Tuple(type_str[1:-1].split(","))
+            else:
+                typ = type_str
+            params.append(Parameter(name=name.strip(), type=typ))
         return params
