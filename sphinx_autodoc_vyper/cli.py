@@ -53,7 +53,7 @@ def _main(contracts_dir: str, output_dir: str) -> None:
     docs_dir = Path(output_dir) / "docs"
     build_dir = docs_dir / "_build" / "html"
     subprocess.run(
-        ["sphinx-build", "-b", "html", str(docs_dir), str(build_dir), "-vv"], check=True
+        ["sphinx-build", "-b", "html", str(docs_dir), str(build_dir), "-v"], check=True
     )
 
     print(f"Documentation built successfully in {build_dir}")
