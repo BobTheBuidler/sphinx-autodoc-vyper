@@ -2,8 +2,8 @@
 
 import os
 import pytest
-from vyper_sphinx_docs.generator import SphinxGenerator
-from vyper_sphinx_docs.parser import VyperParser
+from sphinx_autodoc_vyper.generator import SphinxGenerator
+from sphinx_autodoc_vyper.parser import VyperParser
 
 
 def test_sphinx_generation(contracts_dir, output_dir):
