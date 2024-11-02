@@ -97,9 +97,14 @@ class SphinxGenerator:
                     content += f".. py:data:: {constant.name}\n\n"
                     content += f"   {constant.type}: {constant.value}\n\n"
 
-            if contract.functions:
-                content += _insert_content_section("Functions")
-                for func in contract.functions:
+            if contract.external_functions:
+                content += _insert_content_section("External Functions")
+                for func in contract.external_functions:
+                    content += self._generate_function_docs(func)
+
+            if contract.internal_functions:
+                content += _insert_content_section("Internal Functions")
+                for func in contract.internal_functions:
                     content += self._generate_function_docs(func)
 
             with open(

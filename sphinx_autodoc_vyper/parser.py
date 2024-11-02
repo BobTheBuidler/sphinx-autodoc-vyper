@@ -179,6 +179,8 @@ class VyperParser:
         name = os.path.basename(file_path).replace(".vy", "")
         rel_path = os.path.relpath(file_path, self.contracts_dir)
 
+        external_functions, internal_functions = self._extract_functions(content)
+
         return Contract(
             name=name,
             path=rel_path,
@@ -187,7 +189,8 @@ class VyperParser:
             structs=self._extract_structs(content),
             events=self._extract_events(content),
             constants=self._extract_constants(content),
-            functions=self._extract_functions(content),
+            external_functions=external_functions,
+            internal_functions=internal_functions,
         )
 
     def _extract_contract_docstring(self, content: str) -> Optional[str]:
@@ -238,8 +241,12 @@ class VyperParser:
             for match in re.finditer(EVENT_PATTERN, content)
         ]
 
-    @staticmethod
-    def _extract_functions(content: str) -> List[Function]:
+    @classmethod
+    def _extract_functions(
+        self,
+        content: str,
+        internal: bool,
+    ) -> Tuple[List[Function], List[Function]]:
         """Extract all functions from the contract, with @external functions listed first."""
         external_functions = []
         internal_functions = []
@@ -253,10 +260,9 @@ class VyperParser:
             )
             docstring = match.group(5)[3:-3].strip() if match.group(5) else None
 
-            params = self._parse_params(params_str)
             function = Function(
                 name=name,
-                params=params,
+                params=cls._parse_params(params_str),
                 return_type=return_type,
                 docstring=docstring,
             )
@@ -266,8 +272,7 @@ class VyperParser:
             else:
                 internal_functions.append(function)
 
-        # Combine external and internal functions, with external functions first
-        return external_functions + internal_functions
+        return external_functions, internal_functions
 
     @staticmethod
     def _parse_params(params_str: str) -> List[Parameter]:
