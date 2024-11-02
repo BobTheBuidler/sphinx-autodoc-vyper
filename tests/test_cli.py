@@ -43,5 +43,5 @@ def test_cli_invalid_contracts_dir(tmp_path: Path, monkeypatch, capsys) -> None:
     # Run CLI and check for error
     with pytest.raises(FileNotFoundError) as e:
         cli.main()
-    
+
     assert "Invalid contracts dir" in str(e)
