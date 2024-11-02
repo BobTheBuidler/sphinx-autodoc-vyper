@@ -98,7 +98,7 @@ class SphinxGenerator:
                     content += f"   {constant.type}: {constant.value}\n\n"
 
             # TODO: fix this
-            #if contract.variables:
+            # if contract.variables:
             #    content += _insert_content_section("Variables")
             #    for variable in contract.variables:
             #        content += f".. py:attribute:: {variable.name}\n\n"
