@@ -25,4 +25,4 @@ jobs:
         pip install -e .
         
     - name: Type check with mypy
-      run: mypy vyper_sphinx_docs tests
+      run: mypy sphinx_autodoc_vyper tests
