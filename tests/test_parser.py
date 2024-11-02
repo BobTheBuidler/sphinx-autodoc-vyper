@@ -4,8 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from sphinx_autodoc_vyper.parser import (Contract, Function, Parameter,
-                                         VyperParser)
+from sphinx_autodoc_vyper.parser import Contract, Function, Parameter, VyperParser
 
 
 def test_parse_contracts(contracts_dir: Path) -> None:

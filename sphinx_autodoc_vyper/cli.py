@@ -20,10 +20,17 @@ def main() -> None:
         "--output", "-o", default=".", help="Output directory for documentation"
     )
     parser.add_argument(
-        "--serve", "-s", action="store_true", help="Serve documentation after building"
+        "--serve",
+        "-s",
+        action="store_true",
+        help="Serve documentation after building",
     )
     parser.add_argument(
-        "--port", "-p", type=int, default=8000, help="Port for the documentation server"
+        "--port",
+        "-p",
+        type=int,
+        default=8000,
+        help="Port for the documentation server",
     )
     args = parser.parse_args()
 

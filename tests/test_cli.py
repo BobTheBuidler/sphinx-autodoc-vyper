@@ -11,7 +11,8 @@ def test_cli_basic(contracts_dir, output_dir, monkeypatch, capsys):
     """Test basic CLI functionality."""
     # Mock sys.argv
     monkeypatch.setattr(
-        "sys.argv", ["vyper-docs", str(contracts_dir), "--output", str(output_dir)]
+        "sys.argv",
+        ["vyper-docs", str(contracts_dir), "--output", str(output_dir)],
     )
 
     # Run CLI
