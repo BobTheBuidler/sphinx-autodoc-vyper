@@ -21,6 +21,15 @@ class Parameter:
         if self.type not in VALID_VYPER_TYPES:
             raise ValueError(f"{self} is not a valid Vyper type")
 
+
+@dataclass
+class Struct:
+    """Vyper struct representation."""
+
+    name: str
+    fields: List[Parameter]
+
+
 @dataclass
 class Function:
     """Vyper function representation."""
@@ -41,6 +50,7 @@ class Contract:
     name: str
     path: str
     docstring: Optional[str]
+    structs: List[Struct]
     functions: List[Function]
 
 
@@ -74,17 +84,33 @@ class VyperParser:
         # Extract contract docstring
         docstring = self._extract_contract_docstring(content)
 
+        # Extract structs
+        structs = self._extract_structs(content)
+
         # Extract functions
         functions = self._extract_functions(content)
 
         return Contract(
-            name=name, path=rel_path, docstring=docstring, functions=functions
+            name=name, path=rel_path, docstring=docstring, structs=structs, functions=functions
         )
 
     def _extract_contract_docstring(self, content: str) -> Optional[str]:
         """Extract the contract's main docstring."""
         match = re.search(r'^"""(.*?)"""', content, re.DOTALL | re.MULTILINE)
         return match.group(1).strip() if match else None
+
+    def _extract_structs(self, content: str) -> List[Struct]:
+        """Extract all structs from the contract."""
+        structs = []
+        struct_pattern = r'struct\s+(\w+)\s*{([^}]*)}'
+        
+        for match in re.finditer(struct_pattern, content):
+            name = match.group(1).strip()
+            fields_str = match.group(2).strip()
+            fields = self._parse_params(fields_str)
+            structs.append(Struct(name=name, fields=fields))
+        
+        return structs
 
     def _extract_functions(self, content: str) -> List[Function]:
         """Extract all functions from the contract, with @external functions listed first."""
