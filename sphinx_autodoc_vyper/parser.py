@@ -153,6 +153,9 @@ class Contract:
     functions: List[Function]
 
 
+Functions = typing.Tuple[List[Function], List[Function]]
+
+
 class VyperParser:
     """Parser for Vyper smart contracts."""
 
@@ -243,11 +246,7 @@ class VyperParser:
         ]
 
     @classmethod
-    def _extract_functions(
-        self,
-        content: str,
-        internal: bool,
-    ) -> typing.Tuple[List[Function], List[Function]]:
+    def _extract_functions(cls, content: str) -> Functions:
         """Extract all functions from the contract, with @external functions listed first."""
         external_functions = []
         internal_functions = []
