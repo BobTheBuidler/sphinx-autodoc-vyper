@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sphinx_autodoc_vyper.parser import Contract, Function, Parameter, VyperParser
+from sphinx_autodoc_vyper.parser import Contract, Function, Parameter, Tuple, VyperParser
 
 
 def test_parse_contracts(contracts_dir: Path) -> None:
@@ -154,7 +154,7 @@ def test_parse_contract_with_functions_and_structs() -> None:
             ],
         )
     ]
-    parser._extract_functions = lambda x: [
+    parser._extract_functions = lambda x: [  # type: ignore [method-assign]
         Function(
             name="transfer",
             params=[
