@@ -36,7 +36,12 @@ def main() -> None:
     _main(args.contracts_dir, args.output, args.serve, args.port)
 
 
-def _main(contracts_dir: str, output_dir: str, serve: bool, port: Optional[int] = None) -> None:
+def _main(
+    contracts_dir: str, 
+    output_dir: str, 
+    serve: bool, 
+    port: Optional[int] = None,
+) -> None:
     # Parse contracts
     vyper_parser = VyperParser(Path(contracts_dir))
     contracts = vyper_parser.parse_contracts()

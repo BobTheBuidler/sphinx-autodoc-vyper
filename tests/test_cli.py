@@ -18,17 +18,21 @@ def test_cli_basic(contracts_dir: Path, output_dir: Path, monkeypatch, capsys) -
     # Run CLI
     cli.main()
 
-    # Check output
-    captured = capsys.readouterr()
-    assert "Documentation built successfully" in captured.out
-
     # Check generated files
     docs_dir = output_dir / "docs"
-    build_dir = docs_dir / "_build"
     assert docs_dir.exists()
+
+    build_dir = docs_dir / "_build"
     assert build_dir.exists()
+
+    # Check output
+    captured = capsys.readouterr()
+    assert f"Documentation built successfully in {build_dir}/html" in captured.out
+
+    # Check more generated files
     html_dir = build_dir / "html"
     assert html_dir.exists()
+
     index_path = html_dir / "index.html"
     assert index_path.exists()
 
