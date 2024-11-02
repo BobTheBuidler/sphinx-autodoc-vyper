@@ -284,13 +284,13 @@ class VyperParser:
             for match in re.finditer(VARIABLE_PATTERN, filtered_content)
         ]
 
-    @staticmethod
-    def _extract_structs(content: str) -> List[Struct]:
+    @classmethod
+    def _extract_structs(cls, content: str) -> List[Struct]:
         """Extract all structs from the contract."""
         return [
             Struct(
                 name=match.group(1).strip(),
-                fields=self._parse_params(match.group(2).strip()),
+                fields=cls._parse_params(match.group(2).strip()),
             )
             for match in re.finditer(STRUCT_PATTERN, content)
         ]
