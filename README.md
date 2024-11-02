@@ -15,10 +15,10 @@ A documentation generator for Vyper smart contracts using Sphinx. This tool auto
 
 ```bash
 # Install from PyPI
-pip install vyper-sphinx-docs
+pip install sphinx-autodoc-vyper
 
 # Install with development dependencies
-pip install "vyper-sphinx-docs[dev]"
+pip install "sphinx-autodoc-vyper[dev]"
 ```
 
 ## Quick Start

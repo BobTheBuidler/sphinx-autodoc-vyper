@@ -1,1 +1,1 @@
-"""Test suite for vyper-sphinx-docs."""
+"""Test suite for sphinx-autodoc-vyper."""

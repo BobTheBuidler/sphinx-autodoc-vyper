@@ -6,8 +6,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/vyper-sphinx-docs
-cd vyper-sphinx-docs
+git clone https://github.com/BobTheBuidler/sphinx-autodoc-vyper
+cd sphinx-autodoc-vyper
 ```
 
 2. Create a virtual environment:

@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="vyper-sphinx-docs",
+    name="sphinx-autodoc-vyper",
     version="0.1.0",
     packages=find_packages(),
     install_requires=["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0"],
@@ -19,7 +19,7 @@ setup(
     description="Sphinx documentation generator for Vyper smart contracts",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/vyper-sphinx-docs",
+    url="https://github.com/BobTheBuidler/sphinx-autodoc-vyper",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

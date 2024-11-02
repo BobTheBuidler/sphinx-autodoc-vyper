@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "vyper-sphinx-docs"
+name = "sphinx-autodoc-vyper"
 version = "0.1.0"
 description = "Sphinx documentation generator for Vyper smart contracts"
 readme = "README.md"
@@ -43,9 +43,9 @@ dev = [
 vyper-docs = "sphinx_autodoc_vyper.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/vyper-sphinx-docs"
-Repository = "https://github.com/yourusername/vyper-sphinx-docs.git"
-Documentation = "https://github.com/yourusername/vyper-sphinx-docs#readme"
+Homepage = "https://github.com/BobTheBuidler/sphinx-autodoc-vyper"
+Repository = "https://github.com/BobTheBuidler/sphinx-autodoc-vyper.git"
+Documentation = "https://github.com/BobTheBuidler/sphinx-autodoc-vyper#readme"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sphinx_autodoc_vyper"]
