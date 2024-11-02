@@ -106,6 +106,7 @@ class SphinxGenerator:
             content += f"      {field.type}\n\n"
         return content
 
+
 def _insert_content_section(name: str) -> str:
     """Insert a hyperlinked content section accessible from the docs index."""
     return f"{name}\n{'-' * len(name)}\n\n"
