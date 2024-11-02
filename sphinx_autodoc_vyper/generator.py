@@ -71,6 +71,11 @@ class SphinxGenerator:
             if contract.docstring:
                 content += f"{contract.docstring}\n\n"
 
+            if contract.structs:
+                content += "Structs\n---------\n\n"
+                for struct in contract.structs:
+                    content += self._generate_struct_docs(struct)
+
             if contract.functions:
                 content += "Functions\n---------\n\n"
                 for func in contract.functions:
@@ -91,4 +96,12 @@ class SphinxGenerator:
         content = f".. py:function:: {func.name}({params}){return_type}\n\n"
         if func.docstring:
             content += f"   {func.docstring}\n\n"
+        return content
+
+    @staticmethod
+    def _generate_struct_docs(struct: Struct) -> str:
+        content = f".. py:class:: {func.name}\n\n"
+        for field in struct.fields:
+            content += f"   .. py:attribute:: {struct.name}.{field.name}\n\n"
+            content += f"      {field.type}"
         return content
