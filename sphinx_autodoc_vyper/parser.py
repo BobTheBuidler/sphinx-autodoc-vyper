@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import List, Optional
 
 
+VALID_VYPER_TYPES = {"address", "uint256", "int128", "bool", "bytes32", "string"}
+
 @dataclass
 class Parameter:
     """Function parameter representation."""
@@ -14,6 +16,9 @@ class Parameter:
     name: str
     type: str
 
+    def __post_init__(self) -> None:
+        if self.type not in VALID_VYPER_TYPES:
+            raise ValueError(f"{self} is not a valid Vyper type")
 
 @dataclass
 class Function:
@@ -24,6 +29,9 @@ class Function:
     return_type: Optional[str]
     docstring: Optional[str]
 
+    def __post_init__(self) -> None:
+        if self.return_type is not None and self.return_type not in VALID_VYPER_TYPES:
+            raise ValueError(f"{self} does not return a valid Vyper type")
 
 @dataclass
 class Contract:
