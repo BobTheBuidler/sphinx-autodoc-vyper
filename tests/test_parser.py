@@ -84,7 +84,7 @@ def test_empty_contract(tmp_path: Path) -> None:
     assert len(contracts[0].functions) == 0
 
 
-def test_extract_contract_docstring():
+def test_extract_contract_docstring() -> None:
     """Test contract docstring extraction."""
     content = '''"""
     This is a contract docstring.
@@ -98,7 +98,7 @@ def test_extract_contract_docstring():
     assert docstring == "This is a contract docstring."
 
 
-def test_extract_structs():
+def test_extract_structs() -> None:
     """Test struct extraction from contract."""
     content = """
     struct MyStruct {

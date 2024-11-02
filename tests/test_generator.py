@@ -75,7 +75,7 @@ def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     assert "Get the token balance of an account" in content
 
 
-def test_generate_struct_docs():
+def test_generate_struct_docs() -> None:
     """Test struct documentation generation."""
     struct = Struct(
         name="MyStruct",
