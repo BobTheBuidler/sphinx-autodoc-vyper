@@ -6,7 +6,6 @@ from sphinx_autodoc_vyper.parser import (
     Contract,
     Function,
     Parameter,
-    Struct,
     Tuple,
     VyperParser,
 )
