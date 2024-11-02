@@ -176,18 +176,37 @@ def test_extract_events() -> None:
         from: address
         to: address
         value: uint256
+    event Indexed:
+        from: indexed(address)
+        to: indexed(address)
+        value: uint256
     """
     parser = VyperParser(Path("."))
     events = parser._extract_events(content)
-    assert len(events) == 1
+    assert len(events) == 2
     assert events[0].name == "Transfer"
     assert len(events[0].params) == 3
     assert events[0].params[0].name == "from"
     assert events[0].params[0].type == "address"
+    assert not events[0].params[0].indexed
     assert events[0].params[1].name == "to"
     assert events[0].params[1].type == "address"
+    assert not events[0].params[1].indexed
     assert events[0].params[2].name == "value"
     assert events[0].params[2].type == "uint256"
+    assert not events[0].params[2].indexed
+    
+    assert events[1].name == "Indexed"
+    assert len(events[1].params) == 3
+    assert events[1].params[0].name == "from"
+    assert events[1].params[0].type == "address"
+    assert events[1].params[0].indexed
+    assert events[1].params[1].name == "to"
+    assert events[1].params[1].type == "address"
+    assert events[1].params[1].indexed
+    assert events[1].params[2].name == "value"
+    assert events[1].params[2].type == "uint256"
+    assert events[1].params[2].indexed
 
 
 def test_tuple_length() -> None:
