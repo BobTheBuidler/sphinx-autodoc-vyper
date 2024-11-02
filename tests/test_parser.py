@@ -6,6 +6,7 @@ from sphinx_autodoc_vyper.parser import (
     Contract,
     Function,
     Parameter,
+    Struct,
     Tuple,
     VyperParser,
 )
@@ -150,8 +151,8 @@ def test_parse_contract_with_functions_and_structs() -> None:
     '''
 
     parser = VyperParser(Path("."))
-    parser._extract_contract_docstring = lambda x: "This is a contract docstring."
-    parser._extract_structs = lambda x: [
+    parser._extract_contract_docstring = lambda x: "This is a contract docstring."  # type: ignore [method-assign,assignment]
+    parser._extract_structs = lambda x: [  # type: ignore [method-assign,assignment]
         Struct(
             name="MyStruct",
             fields=[
@@ -160,7 +161,7 @@ def test_parse_contract_with_functions_and_structs() -> None:
             ],
         )
     ]
-    parser._extract_functions = lambda x: [  # type: ignore [method-assign]
+    parser._extract_functions = lambda x: [  # type: ignore [method-assign,assignment]
         Function(
             name="transfer",
             params=[
