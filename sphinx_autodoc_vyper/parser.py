@@ -13,10 +13,18 @@ valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
 VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "String"}
 
+ENUM_PATTERN = r"enum\s+(\w+)\s*\{([^}]*)\}"
 CONSTANT_PATTERN = r"(\w+):\s*constant\((\w+)\)\s*=\s*(.*?)$"
 STRUCT_PATTERN = r"struct\s+(\w+)\s*{([^}]*)}"
+EVENT_PATTERN = r"event\s+(\w+)\((.*?)\)"
 FUNCTION_PATTERN = r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
 PARAM_PATTERN = r"(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)"
+
+
+@dataclass
+class Enum:
+    name: str
+    values: List[str]
 
 
 @dataclass
@@ -93,6 +101,27 @@ class Struct:
 
 
 @dataclass
+class EventParameter:
+    """Vyper event parameter representation."""
+
+    name: str
+    type: str
+    indexed: bool
+
+    def __post_init__(self) -> None:
+        if self.type not in VALID_VYPER_TYPES:
+            logger.warning(f"{self} is not a valid Vyper type")
+
+
+@dataclass
+class Event:
+    """Vyper event representation."""
+
+    name: str
+    params: List[EventParameter]
+
+
+@dataclass
 class Function:
     """Vyper function representation."""
 
@@ -116,7 +145,10 @@ class Contract:
     name: str
     path: str
     docstring: Optional[str]
+    enums: List[Enum]
     structs: List[Struct]
+    events: List[Event]
+    constants: List[Constant]
     functions: List[Function]
 
 
@@ -147,27 +179,31 @@ class VyperParser:
         name = os.path.basename(file_path).replace(".vy", "")
         rel_path = os.path.relpath(file_path, self.contracts_dir)
 
-        # Extract contract docstring
-        docstring = self._extract_contract_docstring(content)
-
-        # Extract structs
-        structs = self._extract_structs(content)
-
-        # Extract functions
-        functions = self._extract_functions(content)
-
         return Contract(
             name=name,
             path=rel_path,
-            docstring=docstring,
-            structs=structs,
-            functions=functions,
+            docstring=self._extract_contract_docstring(content),
+            enums=self._extract_enums(content),
+            structs=self._extract_structs(content),
+            events=self._extract_events(content),
+            constants=self._extract_constants(content),
+            functions=self._extract_functions(content),
         )
 
     def _extract_contract_docstring(self, content: str) -> Optional[str]:
         """Extract the contract's main docstring."""
         match = re.search(r'^"""(.*?)"""', content, re.DOTALL | re.MULTILINE)
         return match.group(1).strip() if match else None
+
+    def _extract_enums(self, content: str) -> List[Enum]:
+        """Extract all enums from the contract."""
+        return [
+            Enum(
+                name=match.group(1).strip(),
+                values=self._parse_enum_values(match.group(2).strip()),
+            )
+            for match in re.finditer(ENUM_PATTERN, content)
+        ]
 
     def _extract_constants(self, content: str) -> List[Constant]:
         """Extract constants from the contract."""
@@ -180,7 +216,8 @@ class VyperParser:
             for match in re.finditer(CONSTANT_PATTERN, content, re.MULTILINE)
         ]
 
-    def _extract_structs(self, content: str) -> List[Struct]:
+    @staticmethod
+    def _extract_structs(content: str) -> List[Struct]:
         """Extract all structs from the contract."""
         return [
             Struct(
@@ -190,7 +227,19 @@ class VyperParser:
             for match in re.finditer(STRUCT_PATTERN, content)
         ]
 
-    def _extract_functions(self, content: str) -> List[Function]:
+    @staticmethod
+    def _extract_events(content: str) -> List[Event]:
+        """Extract all events from the contract."""
+        return [
+            Event(
+                name=match.group(1).strip(),
+                params=self._parse_event_params(match.group(2).strip()),
+            )
+            for match in re.finditer(EVENT_PATTERN, content)
+        ]
+
+    @staticmethod
+    def _extract_functions(content: str) -> List[Function]:
         """Extract all functions from the contract, with @external functions listed first."""
         external_functions = []
         internal_functions = []
@@ -233,4 +282,18 @@ class VyperParser:
             type_str = type_str.strip()
             typ = Tuple(type_str[1:-1].split(",")) if type_str[1] == "(" else type_str
             params.append(Parameter(name=name.strip(), type=typ))
+        return params
+
+    @staticmethod
+    def _parse_event_params(params_str: str) -> List[EventParameter]:
+        """Parse event parameters."""
+        params = []
+        for param_str in params_str.split("\n"):
+            name, type = param_str.strip().split(":")
+            type = type.strip()
+            if indexed := "indexed" in type:
+                assert type.startswith("indexed(") and type.endswith(")"), type
+                type = type[8:-1]
+            param = EventParameter(name=name.strip(), type=type, indexed=indexed)
+            params.append(param)
         return params
