@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from vyper_sphinx_docs.cli import main
+from sphinx_autodoc_vyper.cli import main
 
 
 def test_cli_basic(contracts_dir, output_dir, monkeypatch, capsys):
