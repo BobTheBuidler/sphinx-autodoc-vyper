@@ -56,4 +56,4 @@ def _main(contracts_dir: str, output_dir: str) -> None:
         ["sphinx-build", "-b", "html", str(docs_dir), str(build_dir), "-vv"], check=True
     )
 
-    print(f"Documentation built successfully in {build_dir}/html")
+    print(f"Documentation built successfully in {build_dir}")
