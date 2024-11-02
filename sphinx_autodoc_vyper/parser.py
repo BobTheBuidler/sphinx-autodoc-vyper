@@ -23,7 +23,7 @@ class Constant:
 
     def __post_init__(self) -> None:
         if self.type is not None and self.type not in VALID_VYPER_TYPES:
-            raise ValueError(f"{self} is not a valid Vyper type")
+            logger.warning(f"{self} is not a valid Vyper type")
 
 
 @dataclass
@@ -31,9 +31,13 @@ class Tuple:
     types: List[str]
 
     def __post_init__(self) -> None:
+        # strip whitespace
+        self.types = [type_str.strip() for type_str in self.types]
+
+        # validate types
         for type in self.types:
             if type not in VALID_VYPER_TYPES:
-                raise ValueError(f"{self} is not a valid Vyper type")
+                logger.warning(f"{self} is not a valid Vyper type")
 
 
 @dataclass
@@ -46,7 +50,6 @@ class DynArray:
     def __post_init__(self) -> None:
         if self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
-            #raise ValueError(f"{self} is not a valid Vyper type")
 
 
 @dataclass
@@ -67,7 +70,7 @@ class Parameter:
                 constant = Constant(name=max_length.strip(), type=None, value=None)
                 self.type = DynArray(type, constant)
         elif self.type not in VALID_VYPER_TYPES:
-            raise ValueError(f"{self} is not a valid Vyper type")
+            logger.warning(f"{self} is not a valid Vyper type")
 
 
 @dataclass
@@ -88,9 +91,11 @@ class Function:
     docstring: Optional[str]
 
     def __post_init__(self) -> None:
-        if self.return_type is not None and not isinstance(self.return_type, Tuple):
-            if self.return_type not in VALID_VYPER_TYPES:
-                raise ValueError(f"{self} does not return a valid Vyper type")
+        if self.return_type is not None:
+            if self.return_type.startswith("("):
+                self.return_type = Tuple(self.return_type[1:-1].split(","))
+            elif self.return_type not in VALID_VYPER_TYPES:
+                logger.warning(f"{self} does not return a valid Vyper type")
 
 @dataclass
 class Contract:
