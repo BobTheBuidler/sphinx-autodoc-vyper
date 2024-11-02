@@ -1,0 +1,77 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vyper-sphinx-docs"
+version = "0.1.0"
+description = "Sphinx documentation generator for Vyper smart contracts"
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+authors = [
+    { name = "Vyper Developer", email = "dev@example.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "sphinx>=4.0.0",
+    "sphinx-rtd-theme>=1.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0",
+    "requests>=2.0.0",
+    "tox>=4.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0"
+]
+
+[project.scripts]
+vyper-docs = "vyper_sphinx_docs.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/vyper-sphinx-docs"
+Repository = "https://github.com/yourusername/vyper-sphinx-docs.git"
+Documentation = "https://github.com/yourusername/vyper-sphinx-docs#readme"
+
+[tool.hatch.build.targets.wheel]
+packages = ["vyper_sphinx_docs"]
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.ruff]
+select = ["E", "F", "B", "I"]
+ignore = ["E501"]
+target-version = "py37"
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --cov=vyper_sphinx_docs"
+testpaths = ["tests"]
