@@ -3,7 +3,7 @@
 import os
 from typing import List
 
-from .parser import Contract
+from .parser import Contract, Function
 
 INDEX_RST = """Vyper Smart Contracts Documentation
 ================================
@@ -66,24 +66,15 @@ class SphinxGenerator:
     def _generate_contract_docs(self, contracts: List[Contract]) -> None:
         """Generate documentation for each contract."""
         for contract in contracts:
-            content = f"""{contract.name}
-{'=' * len(contract.name)}
-
-"""
+            content = f"{contract.name}\n{'=' * len(contract.name)}\n\n"
+            
             if contract.docstring:
                 content += f"{contract.docstring}\n\n"
 
             if contract.functions:
                 content += "Functions\n---------\n\n"
                 for func in contract.functions:
-                    params = ", ".join(f"{p.name}: {p.type}" for p in func.params)
-                    return_type = f" -> {func.return_type}" if func.return_type else ""
-                    content += (
-                        f".. py:function:: {func.name}({params}){return_type}\n\n"
-                    )
-
-                    if func.docstring:
-                        content += f"   {func.docstring}\n\n"
+                    content += self._generate_function_docs(func)
 
             with open(
                 os.path.join(self.docs_dir, f"{contract.name}.rst"),
@@ -91,3 +82,13 @@ class SphinxGenerator:
                 encoding="utf-8",
             ) as f:
                 f.write(content)
+    
+    @staticmethod
+    def _generate_function_docs(func: Function) -> str:
+        params = ", ".join(f"{p.name}: {p.type}" for p in func.params)
+        return_type = f" -> {func.return_type}" if func.return_type else ""
+
+        content = f".. py:function:: {func.name}({params}){return_type}\n\n"
+        if func.docstring:
+            content += f"   {func.docstring}\n\n"
+        return content
