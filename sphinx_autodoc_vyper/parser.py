@@ -3,6 +3,7 @@
 import os
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Optional
 
 
@@ -37,7 +38,9 @@ class Contract:
 class VyperParser:
     """Parser for Vyper smart contracts."""
 
-    def __init__(self, contracts_dir: str):
+    def __init__(self, contracts_dir: Path):
+        if not contracts_dir.exists():
+            raise FileNotFoundError(f"Invalid contracts dir: {contracts_dir}")
         self.contracts_dir = contracts_dir
 
     def parse_contracts(self) -> List[Contract]:
