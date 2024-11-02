@@ -89,7 +89,7 @@ def test_empty_contract(tmp_path: Path) -> None:
     assert len(contracts) == 1
     assert contracts[0].name == "empty"
     assert contracts[0].docstring is None
-    assert len(contracts[0].functions) == 0
+    assert len(contracts[0].external_functions) == 0
 
 
 def test_extract_contract_docstring() -> None:
@@ -195,7 +195,7 @@ def test_extract_events() -> None:
     assert events[0].params[2].name == "value"
     assert events[0].params[2].type == "uint256"
     assert not events[0].params[2].indexed
-    
+
     assert events[1].name == "Indexed"
     assert len(events[1].params) == 3
     assert events[1].params[0].name == "from"

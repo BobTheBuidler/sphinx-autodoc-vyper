@@ -74,9 +74,7 @@ class SphinxGenerator:
             if contract.enums:
                 content += _insert_content_section("Enums")
                 for enum in contract.enums:
-                    content += f".. py:class:: {enum.name}\n\n"
-                    for value in enum.values:
-                        content += f"   .. py:attribute:: {value}\n\n"
+                    content += generate_enum_doc(enum)
 
             if contract.structs:
                 content += _insert_content_section("Structs")
@@ -86,16 +84,12 @@ class SphinxGenerator:
             if contract.events:
                 content += _insert_content_section("Events")
                 for event in contract.events:
-                    content += f".. py:class:: {event.name}\n\n"
-                    for field in event.fields:
-                        content += f"   .. py:attribute:: {field.name}\n\n"
-                        content += f"      {f'indexed({field.type})' if field.indexed else field.type}\n\n"
+                    content += generate_event_doc(event)
 
             if contract.constants:
                 content += _insert_content_section("Constants")
                 for constant in contract.constants:
-                    content += f".. py:data:: {constant.name}\n\n"
-                    content += f"   {constant.type}: {constant.value}\n\n"
+                    content += generate_constant_doc(constant)
 
             # TODO: fix this
             # if contract.variables:
@@ -143,3 +137,24 @@ class SphinxGenerator:
 def _insert_content_section(name: str) -> str:
     """Insert a hyperlinked content section accessible from the docs index."""
     return f"{name}\n{'-' * len(name)}\n\n"
+
+
+def generate_enum_doc(enum: Enum) -> str:
+    content = f".. py:class:: {enum.name}\n\n"
+    for value in enum.values:
+        content += f"   .. py:attribute:: {value}\n\n"
+    return content
+
+
+def generate_constant_doc(constant: Constant) -> str:
+    return f".. py:data:: {constant.name}\n\n   {constant.type}: {constant.value}\n\n"
+
+
+def generate_event_doc(event: Event) -> str:
+    content = f".. py:class:: {event.name}\n\n"
+    for field in event.fields:
+        content += f"   .. py:attribute:: {field.name}\n\n"
+        content += (
+            f"      {f'indexed({field.type})' if field.indexed else field.type}\n\n"
+        )
+    return content

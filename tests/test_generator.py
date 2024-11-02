@@ -2,7 +2,12 @@
 
 from pathlib import Path
 
-from sphinx_autodoc_vyper.generator import SphinxGenerator
+from sphinx_autodoc_vyper.generator import (
+    SphinxGenerator,
+    generate_constant_doc,
+    generate_enum_doc,
+    generate_event_doc,
+)
 from sphinx_autodoc_vyper.parser import (
     Constant,
     Contract,
