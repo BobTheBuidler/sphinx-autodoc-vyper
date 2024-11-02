@@ -72,12 +72,12 @@ class SphinxGenerator:
                 content += f"{contract.docstring}\n\n"
 
             if contract.structs:
-                content += "Structs\n---------\n\n"
+                content += _insert_content_section("Structs")
                 for struct in contract.structs:
                     content += self._generate_struct_docs(struct)
 
             if contract.functions:
-                content += "Functions\n---------\n\n"
+                content += _insert_content_section("Functions")
                 for func in contract.functions:
                     content += self._generate_function_docs(func)
 
@@ -105,3 +105,7 @@ class SphinxGenerator:
             content += f"   .. py:attribute:: {struct.name}.{field.name}\n\n"
             content += f"      {field.type}\n\n"
         return content
+
+def _insert_content_section(name: str) -> str:
+    """Insert a hyperlinked content section accessible from the docs index."""
+    return f"{name}\n{'-' * len(name)}\n\n"
