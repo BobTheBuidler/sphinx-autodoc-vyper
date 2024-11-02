@@ -1,10 +1,13 @@
 """Parser for Vyper smart contracts."""
 
+import logging
 import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, List, Optional
+
+logger = logging.getLogger(__name__)
 
 valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
@@ -32,7 +35,8 @@ class DynArray:
 
     def __post_init__(self) -> None:
         if self.type not in VALID_VYPER_TYPES:
-            raise ValueError(f"{self} is not a valid Vyper type")
+            logger.warning(f"{self} is not a valid Vyper type")
+            #raise ValueError(f"{self} is not a valid Vyper type")
 
 
 @dataclass
