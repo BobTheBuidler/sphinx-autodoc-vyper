@@ -4,10 +4,14 @@ from pathlib import Path
 
 from sphinx_autodoc_vyper.generator import SphinxGenerator
 from sphinx_autodoc_vyper.parser import (
+    Constant,
     Contract,
+    Enum,
+    Event,
     Function,
     Parameter,
     Struct,
+    Variable,
     VyperParser,
 )
 
@@ -161,7 +165,7 @@ def test_generate_docs_for_contract_with_functions_and_structs() -> None:
                 ],
             )
         ],
-        functions=[
+        external_functions=[
             Function(
                 name="transfer",
                 params=[

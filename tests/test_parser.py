@@ -33,9 +33,11 @@ def test_contract_parsing(contracts_dir: Path) -> None:
     assert "ERC20 Token Implementation" in contract.docstring
 
     # Test functions
-    assert len(contract.functions) == 2
-    transfer_func = next(f for f in contract.functions if f.name == "transfer")
-    balance_func = next(f for f in contract.functions if f.name == "balance_of")
+    assert len(contract.external_functions) == 2
+    transfer_func = next(f for f in contract.external_functions if f.name == "transfer")
+    balance_func = next(
+        f for f in contract.external_functions if f.name == "balance_of"
+    )
 
     # Test transfer function
     assert isinstance(transfer_func, Function)
@@ -57,7 +59,7 @@ def test_parameter_parsing(contracts_dir: Path) -> None:
     parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
     contract = next(c for c in contracts if c.name == "token")
-    transfer_func = next(f for f in contract.functions if f.name == "transfer")
+    transfer_func = next(f for f in contract.external_functions if f.name == "transfer")
 
     # Test parameters
     assert len(transfer_func.params) == 2
@@ -269,17 +271,17 @@ def test_parse_contract_with_functions_structs_enums_and_events() -> None:
     assert contract.events[0].params[2].type == "uint256"
 
     # Assertions for functions
-    assert len(contract.functions) == 2
-    assert contract.functions[0].name == "transfer"
-    assert len(contract.functions[0].params) == 2
-    assert contract.functions[0].params[0].name == "to"
-    assert contract.functions[0].params[0].type == "address"
-    assert contract.functions[0].params[1].name == "amount"
-    assert contract.functions[0].params[1].type == "uint256"
-    assert contract.functions[0].return_type == "bool"
+    assert len(contract.external_functions) == 2
+    assert contract.external_functions[0].name == "transfer"
+    assert len(contract.external_functions[0].params) == 2
+    assert contract.external_functions[0].params[0].name == "to"
+    assert contract.external_functions[0].params[0].type == "address"
+    assert contract.external_functions[0].params[1].name == "amount"
+    assert contract.external_functions[0].params[1].type == "uint256"
+    assert contract.external_functions[0].return_type == "bool"
 
-    assert contract.functions[1].name == "balance_of"
-    assert len(contract.functions[1].params) == 1
-    assert contract.functions[1].params[0].name == "owner"
-    assert contract.functions[1].params[0].type == "address"
-    assert contract.functions[1].return_type == "uint256"
+    assert contract.external_functions[1].name == "balance_of"
+    assert len(contract.external_functions[1].params) == 1
+    assert contract.external_functions[1].params[0].name == "owner"
+    assert contract.external_functions[1].params[0].type == "address"
+    assert contract.external_functions[1].return_type == "uint256"
