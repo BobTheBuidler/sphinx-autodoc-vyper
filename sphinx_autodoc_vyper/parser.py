@@ -16,7 +16,7 @@ VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "Str
 
 ENUM_PATTERN = r"enum\s+(\w+)\s*:\s*([\w\s\n]+)"
 CONSTANT_PATTERN = r"(\w+):\s*constant\((\w+)\)\s*=\s*(.*?)$"
-VARIABLE_PATTERN = r"(\w+):\s*(\w*)\s*(\w+)\s*"
+VARIABLE_PATTERN = r"(\w+):\s*(public\((\w+)\)|(\w+))"
 STRUCT_PATTERN = r"struct\s+(\w+)\s*{([^}]*)}"
 EVENT_PATTERN = r"event\s+(\w+)\((.*?)\)"
 FUNCTION_PATTERN = r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
@@ -256,8 +256,10 @@ class VyperParser:
         return [
             Variable(
                 name=match.group(1).strip(),
-                type=match.group(3).strip(),
-                visibility=match.group(2).strip() if match.group(2) else "private",
+                type=match.group(3).strip()
+                if match.group(3)
+                else match.group(4).strip(),
+                visibility="public" if match.group(2) else "private",
             )
             for match in re.finditer(VARIABLE_PATTERN, content)
         ]
