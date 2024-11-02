@@ -252,7 +252,27 @@ class VyperParser:
 
     @staticmethod
     def _extract_variables(content: str) -> List[Variable]:
-        """Extract all variables from the contract."""
+        """Extract all contract-level variables from the contract."""
+        # Split the content into lines and filter out lines that are likely inside functions
+        lines = content.splitlines()
+        contract_level_lines = []
+        inside_function = False
+
+        for line in lines:
+            stripped_line = line.strip()
+            # Detect function definitions to avoid parsing their contents
+            if stripped_line.startswith("@") or stripped_line.startswith("def "):
+                inside_function = True
+            elif stripped_line == "":
+                inside_function = False
+
+            # Only consider lines outside of functions
+            if not inside_function and stripped_line:
+                contract_level_lines.append(stripped_line)
+
+        # Join the filtered lines back into a single string for regex processing
+        filtered_content = "\n".join(contract_level_lines)
+
         return [
             Variable(
                 name=match.group(1).strip(),
@@ -261,7 +281,7 @@ class VyperParser:
                 else match.group(4).strip(),
                 visibility="public" if match.group(2) else "private",
             )
-            for match in re.finditer(VARIABLE_PATTERN, content)
+            for match in re.finditer(VARIABLE_PATTERN, filtered_content)
         ]
 
     @staticmethod
