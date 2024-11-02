@@ -41,7 +41,7 @@ class VyperParser:
     def __init__(self, contracts_dir: Path):
         if not contracts_dir.exists():
             raise FileNotFoundError(f"Invalid contracts dir: {contracts_dir}")
-        self.contracts_dir = contracts_dir
+        self.contracts_dir = str(contracts_dir)
 
     def parse_contracts(self) -> List[Contract]:
         """Parse all Vyper contracts in the directory."""

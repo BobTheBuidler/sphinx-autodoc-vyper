@@ -7,7 +7,7 @@ from sphinx_autodoc_vyper.parser import Contract, Function, Parameter, VyperPars
 
 def test_parse_contracts(contracts_dir: Path) -> None:
     """Test parsing multiple contracts."""
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
 
     assert len(contracts) == 2
@@ -17,7 +17,7 @@ def test_parse_contracts(contracts_dir: Path) -> None:
 
 def test_contract_parsing(contracts_dir: Path) -> None:
     """Test detailed contract parsing."""
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
     contract = next(c for c in contracts if c.name == "token")
 
@@ -48,7 +48,7 @@ def test_contract_parsing(contracts_dir: Path) -> None:
 
 def test_parameter_parsing(contracts_dir: Path) -> None:
     """Test function parameter parsing."""
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
     contract = next(c for c in contracts if c.name == "token")
     transfer_func = next(f for f in contract.functions if f.name == "transfer")
@@ -75,7 +75,7 @@ def test_empty_contract(tmp_path: Path) -> None:
     empty_contract = contracts_dir / "empty.vy"
     empty_contract.write_text("")
 
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
 
     assert len(contracts) == 1

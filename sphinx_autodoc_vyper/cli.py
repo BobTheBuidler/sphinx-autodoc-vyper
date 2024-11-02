@@ -34,7 +34,7 @@ def main() -> None:
     args = parser.parse_args()
 
     # Parse contracts
-    vyper_parser = VyperParser(args.contracts_dir)
+    vyper_parser = VyperParser(Path(args.contracts_dir))
     contracts = vyper_parser.parse_contracts()
 
     # Generate Sphinx documentation

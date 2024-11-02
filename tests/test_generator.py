@@ -9,7 +9,7 @@ from sphinx_autodoc_vyper.parser import VyperParser
 def test_sphinx_generation(contracts_dir: Path, output_dir: Path) -> None:
     """Test complete Sphinx documentation generation."""
     # Parse contracts
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
 
     # Generate documentation
@@ -46,7 +46,7 @@ def test_sphinx_generation(contracts_dir: Path, output_dir: Path) -> None:
 
 def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     """Test detailed RST file generation for contracts."""
-    parser = VyperParser(str(contracts_dir))
+    parser = VyperParser(contracts_dir)
     contracts = parser.parse_contracts()
 
     generator = SphinxGenerator(str(output_dir))
