@@ -11,12 +11,14 @@ from typing import NoReturn
 def serve_docs(build_dir: Path, port: int = 8000) -> NoReturn:  # type: ignore [misc]
     """Serve the documentation on a local development server."""
 
-    if not build_dir.exists():
+    html_dir = build_dir / "html"
+
+    if not html_dir.exists():
         raise FileNotFoundError(
             "Documentation not found. Run 'sphinx-autodoc-vyper' first to generate the documentation."
         )
 
-    os.chdir(build_dir)
+    os.chdir(html_dir)
 
     handler = http.server.SimpleHTTPRequestHandler
 

@@ -14,9 +14,11 @@ from sphinx_autodoc_vyper import cli, server
 def test_server_start(tmp_path: Path) -> None:
     """Test server startup and accessibility."""
     # Create mock build directory
-    build_dir = tmp_path / "docs" / "_build" / "html"
-    build_dir.mkdir(parents=True)
-    (build_dir / "index.html").write_text("<html><body>Test</body></html>")
+    build_dir = tmp_path / "docs" / "_build"
+
+    html_dir = build_dir / "html"
+    html_dir.mkdir(parents=True)
+    (html_dir / "index.html").write_text("<html><body>Test</body></html>")
 
     # Generate documentation
     cli._main(contracts_dir="", output_dir=str(build_dir))
