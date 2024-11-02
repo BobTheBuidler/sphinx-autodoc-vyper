@@ -1,7 +1,7 @@
 """Tests for the Vyper contract parser."""
 
 import pytest
-from vyper_sphinx_docs.parser import VyperParser, Contract, Function, Parameter
+from sphinx_autodoc_vyper.parser import VyperParser, Contract, Function, Parameter
 
 
 def test_parse_contracts(contracts_dir):
