@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import NoReturn
 
 
-def serve_docs(port: int = 8000) -> NoReturn:
+def serve_docs(port: int = 8000) -> NoReturn:  # type: ignore [misc]
     """Serve the documentation on a local development server."""
     build_dir = Path("docs/_build/html")
 

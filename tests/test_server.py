@@ -42,7 +42,7 @@ def test_server_missing_docs(tmp_path: Path) -> None:
         serve_docs()
 
 
-def _get_free_port() -> int:
+def _get_free_port() -> int:  # type: ignore [no-any-return]
     """Get an available port number."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("", 0))
