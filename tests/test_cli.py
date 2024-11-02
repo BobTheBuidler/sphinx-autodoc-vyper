@@ -7,7 +7,7 @@ import pytest
 from sphinx_autodoc_vyper.cli import main
 
 
-def test_cli_basic(contracts_dir, output_dir, monkeypatch, capsys):
+def test_cli_basic(contracts_dir: Path, output_dir: Path, monkeypatch, capsys) -> None:
     """Test basic CLI functionality."""
     # Mock sys.argv
     monkeypatch.setattr(
@@ -30,7 +30,7 @@ def test_cli_basic(contracts_dir, output_dir, monkeypatch, capsys):
     assert (build_dir / "html" / "index.html").exists()
 
 
-def test_cli_invalid_contracts_dir(tmp_path, monkeypatch, capsys):
+def test_cli_invalid_contracts_dir(tmp_path: Path, monkeypatch, capsys) -> None:
     """Test CLI with invalid contracts directory."""
     invalid_dir = tmp_path / "nonexistent"
 

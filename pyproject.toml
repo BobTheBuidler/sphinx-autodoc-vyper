@@ -60,8 +60,8 @@ profile = "black"
 multi_line_output = 3
 
 [tool.ruff]
-select = ["E", "F", "B", "I"]
-ignore = ["E501"]
+lint.select = ["E", "F", "B", "I"]
+lint.ignore = ["E501"]
 target-version = "py310"
 
 [tool.mypy]
