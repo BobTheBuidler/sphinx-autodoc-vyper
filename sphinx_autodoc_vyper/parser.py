@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
-VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "bytes32", "string"}
+VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "String"}
 
 
 @dataclass
