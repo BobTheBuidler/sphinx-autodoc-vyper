@@ -47,17 +47,17 @@ def contracts_dir(tmp_path, sample_contract):
     """Create a temporary directory with sample contracts."""
     contracts = tmp_path / "contracts"
     contracts.mkdir()
-    
+
     # Create main contract
     contract_file = contracts / "token.vy"
     contract_file.write_text(sample_contract)
-    
+
     # Create nested contract
     nested_dir = contracts / "nested"
     nested_dir.mkdir()
     nested_contract = nested_dir / "nested_token.vy"
     nested_contract.write_text(sample_contract)
-    
+
     return contracts
 
 

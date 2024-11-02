@@ -14,18 +14,15 @@ def test_server_start(tmp_path):
     build_dir = tmp_path / "docs" / "_build" / "html"
     build_dir.mkdir(parents=True)
     (build_dir / "index.html").write_text("<html><body>Test</body></html>")
-    
+
     # Start server in a thread
     port = _get_free_port()
-    server_thread = threading.Thread(
-        target=lambda: serve_docs(port=port),
-        daemon=True
-    )
+    server_thread = threading.Thread(target=lambda: serve_docs(port=port), daemon=True)
     server_thread.start()
-    
+
     # Wait for server to start
     time.sleep(1)
-    
+
     # Test server response
     try:
         response = requests.get(f"http://localhost:{port}")
@@ -45,7 +42,7 @@ def test_server_missing_docs(tmp_path):
 def _get_free_port():
     """Get an available port number."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('', 0))
+        s.bind(("", 0))
         s.listen(1)
         port = s.getsockname()[1]
     return port
