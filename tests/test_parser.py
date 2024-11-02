@@ -151,33 +151,10 @@ def test_parse_contract_with_functions_and_structs() -> None:
     '''
 
     parser = VyperParser(Path("."))
-    parser._extract_contract_docstring = lambda x: "This is a contract docstring."  # type: ignore [method-assign,assignment]
-    parser._extract_structs = lambda x: [  # type: ignore [method-assign,assignment]
-        Struct(
-            name="MyStruct",
-            fields=[
-                Parameter(name="field1", type="uint256"),
-                Parameter(name="field2", type="address"),
-            ],
-        )
-    ]
-    parser._extract_functions = lambda x: [  # type: ignore [method-assign,assignment]
-        Function(
-            name="transfer",
-            params=[
-                Parameter(name="to", type="address"),
-                Parameter(name="amount", type="uint256"),
-            ],
-            return_type="bool",
-            docstring="Transfer tokens to a specified address.",
-        ),
-        Function(
-            name="balance_of",
-            params=[Parameter(name="owner", type="address")],
-            return_type="uint256",
-            docstring="Get the balance of an account.",
-        ),
-    ]
+    # Use the actual content to parse
+    parser._extract_contract_docstring = lambda x: parser._extract_contract_docstring(contract_content)  # type: ignore [method-assign,assignment]
+    parser._extract_structs = lambda x: parser._extract_structs(contract_content)  # type: ignore [method-assign,assignment]
+    parser._extract_functions = lambda x: parser._extract_functions(contract_content)  # type: ignore [method-assign,assignment]
 
     contract = parser.parse_contracts()[0]
 
@@ -185,11 +162,26 @@ def test_parse_contract_with_functions_and_structs() -> None:
     assert len(contract.structs) == 1
     assert contract.structs[0].name == "MyStruct"
     assert len(contract.structs[0].fields) == 2
+    assert contract.structs[0].fields[0].name == "field1"
+    assert contract.structs[0].fields[0].type == "uint256"
+    assert contract.structs[0].fields[1].name == "field2"
+    assert contract.structs[0].fields[1].type == "address"
 
     # Assertions for functions
     assert len(contract.functions) == 2
     assert contract.functions[0].name == "transfer"
+    assert len(contract.functions[0].params) == 2
+    assert contract.functions[0].params[0].name == "to"
+    assert contract.functions[0].params[0].type == "address"
+    assert contract.functions[0].params[1].name == "amount"
+    assert contract.functions[0].params[1].type == "uint256"
+    assert contract.functions[0].return_type == "bool"
+
     assert contract.functions[1].name == "balance_of"
+    assert len(contract.functions[1].params) == 1
+    assert contract.functions[1].params[0].name == "owner"
+    assert contract.functions[1].params[0].type == "address"
+    assert contract.functions[1].return_type == "uint256"
 
 
 def test_tuple_length() -> None:
