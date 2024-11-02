@@ -5,7 +5,7 @@ import socket
 import threading
 import time
 import requests
-from vyper_sphinx_docs.server import serve_docs
+from sphinx_autodoc_vyper.server import serve_docs
 
 
 def test_server_start(tmp_path):
