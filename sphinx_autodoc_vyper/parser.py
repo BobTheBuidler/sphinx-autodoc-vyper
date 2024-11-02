@@ -14,7 +14,7 @@ valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
 VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "String"}
 
-ENUM_PATTERN = r"enum\s+(\w+)\s*\{([^}]*)\}"
+ENUM_PATTERN = r'enum\s+(\w+)\s*:\s*([\w\s\n]+)'
 CONSTANT_PATTERN = r"(\w+):\s*constant\((\w+)\)\s*=\s*(.*?)$"
 STRUCT_PATTERN = r"struct\s+(\w+)\s*{([^}]*)}"
 EVENT_PATTERN = r"event\s+(\w+)\((.*?)\)"
@@ -24,12 +24,15 @@ PARAM_PATTERN = r"(\w+:\s*DynArray\[[^\]]+\]|\w+:\s*\w+)"
 
 @dataclass
 class Enum:
+    """Vyper enum representation."""
+
     name: str
     values: List[str]
 
 
 @dataclass
 class Constant:
+    """Vyper constant representation."""
 
     name: str
     type: str
@@ -42,6 +45,8 @@ class Constant:
 
 @dataclass
 class Tuple:
+    """Vyper tuple representation."""
+
     types: List[str]
 
     def __post_init__(self) -> None:
@@ -203,12 +208,13 @@ class VyperParser:
         match = re.search(r'^"""(.*?)"""', content, re.DOTALL | re.MULTILINE)
         return match.group(1).strip() if match else None
 
-    def _extract_enums(self, content: str) -> List[Enum]:
+    @staticmethod
+    def _extract_enums(content: str) -> List[Enum]:
         """Extract all enums from the contract."""
         return [
             Enum(
                 name=match.group(1).strip(),
-                values=self._parse_enum_values(match.group(2).strip()),
+                values=[value.strip() for value in match.group(2).split("\n") if value.strip()],
             )
             for match in re.finditer(ENUM_PATTERN, content)
         ]
