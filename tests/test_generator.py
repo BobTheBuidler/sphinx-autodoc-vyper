@@ -81,6 +81,32 @@ def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     assert "Get the token balance of an account" in content
 
 
+def test_generate_enum_doc() -> None:
+    """Test documentation generation for Enum."""
+    enum = Enum(name="Status", values=["PENDING", "COMPLETED"])
+    generated_doc = generate_enum_doc(enum)
+    expected_doc = ".. py:enum:: Status\n   :members:\n\n   PENDING\n   COMPLETED\n"
+    assert generated_doc == expected_doc
+
+
+def test_generate_constant_doc() -> None:
+    """Test documentation generation for Constant."""
+    constant = Constant(name="MAX_SUPPLY", type="uint256", value="1000000")
+    generated_doc = generate_constant_doc(constant)
+    expected_doc = ".. py:data:: MAX_SUPPLY\n\n   :type: uint256\n   :value: 1000000\n"
+    assert generated_doc == expected_doc
+
+
+def test_generate_variable_doc() -> None:
+    """Test documentation generation for Variable."""
+    variable = Variable(name="owner", type="address", visibility="public")
+    generated_doc = generate_variable_doc(variable)
+    expected_doc = (
+        ".. py:attribute:: owner\n\n   :type: address\n   :visibility: public\n"
+    )
+    assert generated_doc == expected_doc
+
+
 def test_generate_struct_docs() -> None:
     """Test struct documentation generation."""
     struct = Struct(
@@ -98,6 +124,26 @@ def test_generate_struct_docs() -> None:
         "      address"
     )
     assert SphinxGenerator._generate_struct_docs(struct) == expected_output
+
+
+def test_generate_event_doc() -> None:
+    """Test documentation generation for Event."""
+    event = Event(
+        name="Transfer",
+        params=[
+            Parameter(name="from", type="address"),
+            Parameter(name="to", type="address"),
+            Parameter(name="value", type="uint256"),
+        ],
+    )
+    generated_doc = generate_event_doc(event)
+    expected_doc = (
+        ".. py:event:: Transfer\n\n"
+        "   :param address from: \n"
+        "   :param address to: \n"
+        "   :param uint256 value: \n"
+    )
+    assert generated_doc == expected_doc
 
 
 def test_generate_docs_for_contract_with_functions_and_structs() -> None:
