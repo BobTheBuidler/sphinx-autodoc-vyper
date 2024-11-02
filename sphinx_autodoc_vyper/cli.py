@@ -3,6 +3,7 @@
 import argparse
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 from .generator import SphinxGenerator
 from .parser import VyperParser
