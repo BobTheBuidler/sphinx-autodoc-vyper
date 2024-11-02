@@ -67,7 +67,7 @@ class SphinxGenerator:
         """Generate documentation for each contract."""
         for contract in contracts:
             content = f"{contract.name}\n{'=' * len(contract.name)}\n\n"
-            
+
             if contract.docstring:
                 content += f"{contract.docstring}\n\n"
 
@@ -82,7 +82,7 @@ class SphinxGenerator:
                 encoding="utf-8",
             ) as f:
                 f.write(content)
-    
+
     @staticmethod
     def _generate_function_docs(func: Function) -> str:
         params = ", ".join(f"{p.name}: {p.type}" for p in func.params)
