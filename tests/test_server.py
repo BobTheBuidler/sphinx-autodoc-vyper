@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from sphinx_autodoc_vyper.server import serve_docs
+from sphinx_autodoc_vyper import cli, server
 
 
 def test_server_start(tmp_path: Path) -> None:
@@ -18,9 +18,12 @@ def test_server_start(tmp_path: Path) -> None:
     build_dir.mkdir(parents=True)
     (build_dir / "index.html").write_text("<html><body>Test</body></html>")
 
+    # Generate documentation
+    cli.main()
+
     # Start server in a thread
     port = _get_free_port()
-    server_thread = threading.Thread(target=lambda: serve_docs(port=port), daemon=True)
+    server_thread = threading.Thread(target=lambda: server.serve_docs(port=port), daemon=True)
     server_thread.start()
 
     # Wait for server to start
@@ -39,7 +42,7 @@ def test_server_start(tmp_path: Path) -> None:
 def test_server_missing_docs(tmp_path: Path) -> None:
     """Test server behavior with missing documentation."""
     with pytest.raises(FileNotFoundError):
-        serve_docs()
+        server.serve_docs()
 
 
 def _get_free_port() -> int:
