@@ -78,31 +78,37 @@ class VyperParser:
         return match.group(1).strip() if match else None
 
     def _extract_functions(self, content: str) -> List[Function]:
-        """Extract all functions from the contract."""
-        functions = []
+        """Extract all functions from the contract, with @external functions listed first."""
+        external_functions = []
+        internal_functions = []
         function_pattern = (
-            r'@external\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
+            r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
         )
 
         for match in re.finditer(function_pattern, content):
-            name = match.group(1).strip()
-            params_str = match.group(2).strip()
+            decorator = match.group(1).strip()
+            name = match.group(2).strip()
+            params_str = match.group(3).strip()
             return_type = (
-                match.group(3).replace("->", "").strip() if match.group(3) else None
+                match.group(4).replace("->", "").strip() if match.group(4) else None
             )
-            docstring = match.group(4)[3:-3].strip() if match.group(4) else None
+            docstring = match.group(5)[3:-3].strip() if match.group(5) else None
 
             params = self._parse_params(params_str)
-            functions.append(
-                Function(
-                    name=name,
-                    params=params,
-                    return_type=return_type,
-                    docstring=docstring,
-                )
+            function = Function(
+                name=name,
+                params=params,
+                return_type=return_type,
+                docstring=docstring,
             )
 
-        return functions
+            if decorator == "external":
+                external_functions.append(function)
+            else:
+                internal_functions.append(function)
+
+        # Combine external and internal functions, with external functions first
+        return external_functions + internal_functions
 
     def _parse_params(self, params_str: str) -> List[Parameter]:
         """Parse function parameters."""
