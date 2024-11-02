@@ -1,8 +1,8 @@
 """Development server for viewing documentation."""
 
 import http.server
-import socketserver
 import os
+import socketserver
 import webbrowser
 from pathlib import Path
 from typing import NoReturn

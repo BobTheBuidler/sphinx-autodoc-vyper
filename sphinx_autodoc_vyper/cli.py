@@ -4,8 +4,9 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
-from .parser import VyperParser
+
 from .generator import SphinxGenerator
+from .parser import VyperParser
 from .server import serve_docs
 
 

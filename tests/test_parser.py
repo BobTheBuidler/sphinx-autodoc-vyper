@@ -1,8 +1,11 @@
 """Tests for the Vyper contract parser."""
 
-import pytest
 from pathlib import Path
-from sphinx_autodoc_vyper.parser import VyperParser, Contract, Function, Parameter
+
+import pytest
+
+from sphinx_autodoc_vyper.parser import (Contract, Function, Parameter,
+                                         VyperParser)
 
 
 def test_parse_contracts(contracts_dir: Path) -> None:

@@ -1,7 +1,9 @@
 """Tests for the command-line interface."""
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from sphinx_autodoc_vyper.cli import main
 
 

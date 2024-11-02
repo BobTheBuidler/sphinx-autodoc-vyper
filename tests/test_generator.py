@@ -1,8 +1,10 @@
 """Tests for the Sphinx documentation generator."""
 
 import os
-import pytest
 from pathlib import Path
+
+import pytest
+
 from sphinx_autodoc_vyper.generator import SphinxGenerator
 from sphinx_autodoc_vyper.parser import VyperParser
 

@@ -1,11 +1,13 @@
 """Tests for the documentation server."""
 
-import pytest
 import socket
 import threading
 import time
-import requests
 from pathlib import Path
+
+import pytest
+import requests
+
 from sphinx_autodoc_vyper.server import serve_docs
 
 
