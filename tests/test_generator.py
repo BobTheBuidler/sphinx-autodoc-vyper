@@ -104,6 +104,7 @@ def test_generate_docs_for_contract_with_functions_and_structs() -> None:
     """Test documentation generation for a contract with both functions and structs."""
     contract = Contract(
         name="TestContract",
+        path=".",
         docstring="This is a contract docstring.",
         structs=[
             Struct(
