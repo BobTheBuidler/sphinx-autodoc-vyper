@@ -45,7 +45,7 @@ class DynArray:
     """Dynamic length array representation."""
 
     type: str
-    max_length: int
+    max_length: Union[int, Constant]
 
     def __post_init__(self) -> None:
         if self.type not in VALID_VYPER_TYPES:
@@ -63,9 +63,9 @@ class Parameter:
     type: Type
 
     def __post_init__(self) -> None:
-        if self.type.startswith("DynArray"):
-            assert self.type.endswith("]")
-            type, max_length = self.type[:-1].split("[")[1].split(",")
+        if self.type.startswith("DynArray"):  # type: ignore [union-attr]
+            assert self.type.endswith("]")  # type: ignore [union-attr]
+            type, max_length = self.type[:-1].split("[")[1].split(",")  # type: ignore [index]
             try:
                 self.type = DynArray(type, int(max_length))
             except ValueError:
@@ -95,8 +95,8 @@ class Function:
 
     def __post_init__(self) -> None:
         if self.return_type is not None:
-            if self.return_type.startswith("("):
-                self.return_type = Tuple(self.return_type[1:-1].split(","))
+            if self.return_type.startswith("("):  # type: ignore [union-attr]
+                self.return_type = Tuple(self.return_type[1:-1].split(","))  # type: ignore [index]
             elif self.return_type not in VALID_VYPER_TYPES:
                 logger.warning(f"{self} does not return a valid Vyper type")
 
@@ -217,9 +217,6 @@ class VyperParser:
         for param in re.finditer(param_pattern, params_str):
             name, type_str = param.group().split(":")
             type_str = type_str.strip()
-            if type_str[1] == "(":
-                typ = Tuple(type_str[1:-1].split(","))
-            else:
-                typ = type_str
+            typ = Tuple(type_str[1:-1].split(",")) if type_str[1] == "(" else type_str
             params.append(Parameter(name=name.strip(), type=typ))
         return params
