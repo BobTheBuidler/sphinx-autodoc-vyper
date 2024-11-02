@@ -115,3 +115,71 @@ def test_extract_structs() -> None:
     assert structs[0].fields[0].type == "uint256"
     assert structs[0].fields[1].name == "field2"
     assert structs[0].fields[1].type == "address"
+
+
+def test_parse_contract_with_functions_and_structs() -> None:
+    """Test parsing a contract with both functions and structs."""
+    contract_content = '''
+    """
+    This is a contract docstring.
+    """
+
+    struct MyStruct:
+        field1: uint256
+        field2: address
+
+    @external
+    def transfer(to: address, amount: uint256) -> bool:
+        """
+        Transfer tokens to a specified address.
+        """
+        return True
+
+    @external
+    def balance_of(owner: address) -> uint256:
+        """
+        Get the balance of an account.
+        """
+        return 0
+    '''
+
+    parser = VyperParser(Path("."))
+    parser._extract_contract_docstring = lambda x: "This is a contract docstring."
+    parser._extract_structs = lambda x: [
+        Struct(
+            name="MyStruct",
+            fields=[
+                Parameter(name="field1", type="uint256"),
+                Parameter(name="field2", type="address"),
+            ],
+        )
+    ]
+    parser._extract_functions = lambda x: [
+        Function(
+            name="transfer",
+            params=[
+                Parameter(name="to", type="address"),
+                Parameter(name="amount", type="uint256"),
+            ],
+            return_type="bool",
+            docstring="Transfer tokens to a specified address.",
+        ),
+        Function(
+            name="balance_of",
+            params=[Parameter(name="owner", type="address")],
+            return_type="uint256",
+            docstring="Get the balance of an account.",
+        ),
+    ]
+
+    contract = parser.parse_contracts()[0]
+
+    # Assertions for structs
+    assert len(contract.structs) == 1
+    assert contract.structs[0].name == "MyStruct"
+    assert len(contract.structs[0].fields) == 2
+
+    # Assertions for functions
+    assert len(contract.functions) == 2
+    assert contract.functions[0].name == "transfer"
+    assert contract.functions[1].name == "balance_of"
