@@ -23,7 +23,9 @@ def test_server_start(tmp_path: Path) -> None:
 
     # Start server in a thread
     port = _get_free_port()
-    server_thread = threading.Thread(target=lambda: server.serve_docs(port=port), daemon=True)
+    server_thread = threading.Thread(
+        target=lambda: server.serve_docs(build_dir, port=port), daemon=True
+    )
     server_thread.start()
 
     # Wait for server to start
