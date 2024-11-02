@@ -97,11 +97,12 @@ class SphinxGenerator:
                     content += f".. py:data:: {constant.name}\n\n"
                     content += f"   {constant.type}: {constant.value}\n\n"
 
-            if contract.variables:
-                content += _insert_content_section("Variables")
-                for variable in contract.variables:
-                    content += f".. py:attribute:: {variable.name}\n\n"
-                    content += f"   {f'public({variable.type})' if variable.visibility == 'public' else variable.type}"
+            # TODO: fix this
+            #if contract.variables:
+            #    content += _insert_content_section("Variables")
+            #    for variable in contract.variables:
+            #        content += f".. py:attribute:: {variable.name}\n\n"
+            #        content += f"   {f'public({variable.type})' if variable.visibility == 'public' else variable.type}"
 
             if contract.external_functions:
                 content += _insert_content_section("External Functions")
