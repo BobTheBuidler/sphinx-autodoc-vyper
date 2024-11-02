@@ -151,9 +151,9 @@ class Event:
 
     def generate_docs(self) -> str:
         content = f".. py:class:: {self.name}\n\n"
-        for field in self.fields:
-            type_str = f"indexed({field.type})" if field.indexed else field.type
-            content += f"   .. py:attribute:: {field.name}\n\n"
+        for param in self.params:
+            type_str = f"indexed({param.type})" if param.indexed else param.type
+            content += f"   .. py:attribute:: {param.name}\n\n"
             content += f"      {type_str}\n\n"
         return content
 
