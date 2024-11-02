@@ -151,6 +151,7 @@ def test_parse_contract_with_functions_and_structs() -> None:
 
     parser = VyperParser(Path("."))
     # Use the actual content to parse
+    parser.parse_contracts = lambda x: [parser._parse_contract(contract_content)]
     parser._extract_contract_docstring = lambda x: parser._extract_contract_docstring(contract_content)  # type: ignore [method-assign,assignment]
     parser._extract_structs = lambda x: parser._extract_structs(contract_content)  # type: ignore [method-assign,assignment]
     parser._extract_functions = lambda x: parser._extract_functions(contract_content)  # type: ignore [method-assign,assignment]
