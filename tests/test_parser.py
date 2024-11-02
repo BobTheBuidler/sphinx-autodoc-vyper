@@ -183,3 +183,12 @@ def test_parse_contract_with_functions_and_structs() -> None:
     assert len(contract.functions) == 2
     assert contract.functions[0].name == "transfer"
     assert contract.functions[1].name == "balance_of"
+
+
+def test_tuple_length() -> None:
+    """Test the length of a Tuple instance."""
+    tuple_instance = Tuple(types=["uint256", "address", "bool"])
+    assert len(tuple_instance) == 3
+
+    empty_tuple_instance = Tuple(types=[])
+    assert len(empty_tuple_instance) == 0
