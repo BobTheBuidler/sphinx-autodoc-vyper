@@ -32,7 +32,7 @@ def main() -> None:
         help="Port for the documentation server",
     )
     args = parser.parse_args()
-    _main(args.contracts_dir, args.output, args.serve, args.port)
+    _main(args.contracts_dir, args.output)
 
     # Serve documentation if requested
     if args.serve:
