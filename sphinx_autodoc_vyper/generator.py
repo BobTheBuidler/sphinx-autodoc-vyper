@@ -3,7 +3,7 @@
 import os
 from typing import List
 
-from .parser import Contract, Function
+from .parser import Contract, Function, Struct
 
 INDEX_RST = """Vyper Smart Contracts Documentation
 ================================
