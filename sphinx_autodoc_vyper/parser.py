@@ -14,8 +14,9 @@ valid_ints = {f"int{8 * (i+1)}" for i in range(32)}
 valid_uints = {f"uint{8 * (i+1)}" for i in range(32)}
 VALID_VYPER_TYPES = {*valid_ints, *valid_uints, "address", "bool", "Bytes", "String"}
 
-ENUM_PATTERN = r'enum\s+(\w+)\s*:\s*([\w\s\n]+)'
+ENUM_PATTERN = r"enum\s+(\w+)\s*:\s*([\w\s\n]+)"
 CONSTANT_PATTERN = r"(\w+):\s*constant\((\w+)\)\s*=\s*(.*?)$"
+VARIABLE_PATTERN = r"(\w+):\s*(\w*)\s*(\w+)\s*"
 STRUCT_PATTERN = r"struct\s+(\w+)\s*{([^}]*)}"
 EVENT_PATTERN = r"event\s+(\w+)\((.*?)\)"
 FUNCTION_PATTERN = r'@(external|internal)\s+def\s+([^(]+)\(([^)]*)\)(\s*->\s*[^:]+)?:\s*("""[\s\S]*?""")?'
@@ -40,6 +41,19 @@ class Constant:
 
     def __post_init__(self) -> None:
         if self.type is not None and self.type not in VALID_VYPER_TYPES:
+            logger.warning(f"{self} is not a valid Vyper type")
+
+
+@dataclass
+class Variable:
+    """Vyper variable representation."""
+
+    name: str
+    type: str
+    visibility: str
+
+    def __post_init__(self) -> None:
+        if self.type not in VALID_VYPER_TYPES:
             logger.warning(f"{self} is not a valid Vyper type")
 
 
@@ -155,6 +169,7 @@ class Contract:
     structs: List[Struct]
     events: List[Event]
     constants: List[Constant]
+    variables: List[Variable]
     external_functions: List[Function]
     internal_functions: List[Function]
 
@@ -199,6 +214,7 @@ class VyperParser:
             structs=self._extract_structs(content),
             events=self._extract_events(content),
             constants=self._extract_constants(content),
+            variables=self._extract_variables(content),
             external_functions=external_functions,
             internal_functions=internal_functions,
         )
@@ -214,7 +230,11 @@ class VyperParser:
         return [
             Enum(
                 name=match.group(1).strip(),
-                values=[value.strip() for value in match.group(2).split("\n") if value.strip()],
+                values=[
+                    value.strip()
+                    for value in match.group(2).split("\n")
+                    if value.strip()
+                ],
             )
             for match in re.finditer(ENUM_PATTERN, content)
         ]
@@ -228,6 +248,18 @@ class VyperParser:
                 value=match.group(3).strip(),
             )
             for match in re.finditer(CONSTANT_PATTERN, content, re.MULTILINE)
+        ]
+
+    @staticmethod
+    def _extract_variables(content: str) -> List[Variable]:
+        """Extract all variables from the contract."""
+        return [
+            Variable(
+                name=match.group(1).strip(),
+                type=match.group(3).strip(),
+                visibility=match.group(2).strip() if match.group(2) else "private",
+            )
+            for match in re.finditer(VARIABLE_PATTERN, content)
         ]
 
     @staticmethod
