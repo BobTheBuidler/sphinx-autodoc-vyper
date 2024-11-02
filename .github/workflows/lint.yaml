@@ -24,10 +24,10 @@ jobs:
         pip install black isort ruff
         
     - name: Check formatting with Black
-      run: black --check vyper_sphinx_docs tests
+      run: black --check sphinx_autodoc_vyper tests
       
     - name: Check imports with isort
-      run: isort --check-only vyper_sphinx_docs tests
+      run: isort --check-only sphinx_autodoc_vyper tests
       
     - name: Lint with Ruff
-      run: ruff check vyper_sphinx_docs tests
+      run: ruff check sphinx_autodoc_vyper tests
