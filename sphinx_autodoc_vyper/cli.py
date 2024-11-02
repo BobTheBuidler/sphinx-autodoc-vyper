@@ -37,6 +37,7 @@ def main() -> None:
 
     # Serve documentation if requested
     if args.serve:
+        build_dir = Path(args.output) / "docs" / "_build"
         serve_docs(build_dir, port=args.port)
 
 
