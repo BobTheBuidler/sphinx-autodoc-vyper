@@ -3,6 +3,7 @@
 import logging
 import os
 import re
+import typing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, List, Optional, Union
@@ -246,7 +247,7 @@ class VyperParser:
         self,
         content: str,
         internal: bool,
-    ) -> Tuple[List[Function], List[Function]]:
+    ) -> typing.Tuple[List[Function], List[Function]]:
         """Extract all functions from the contract, with @external functions listed first."""
         external_functions = []
         internal_functions = []
