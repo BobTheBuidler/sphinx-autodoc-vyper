@@ -19,7 +19,7 @@ class Constant:
     value: Any
 
     def __post_init__(self) -> None:
-        if self.type not in VALID_VYPER_TYPES:
+        if self.type is not None and self.type not in VALID_VYPER_TYPES:
             raise ValueError(f"{self} is not a valid Vyper type")
 
 
