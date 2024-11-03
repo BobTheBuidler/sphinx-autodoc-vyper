@@ -61,14 +61,17 @@ A simple ERC20 token implementation.
 @external
 def transfer(to: address, amount: uint256) -> bool:
     """
-    Transfer tokens to a specified address.
-    
-    Args:
-        to: The recipient address
-        amount: The amount of tokens to transfer
-        
-    Returns:
-        bool: True if transfer succeeded
+    @notice
+        Transfer tokens to a specified address.
+
+    @param
+        to The recipient address
+
+    @param
+        amount The amount of tokens to transfer
+
+    @return
+        True if transfer succeeded
     """
     # Implementation
     return True
