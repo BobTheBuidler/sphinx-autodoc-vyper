@@ -71,14 +71,41 @@ class SphinxGenerator:
             if contract.docstring:
                 content += f"{contract.docstring}\n\n"
 
+            if contract.enums:
+                content += _insert_content_section("Enums")
+                for enum in contract.enums:
+                    content += enum.generate_docs()
+
             if contract.structs:
-                content += "Structs\n---------\n\n"
+                content += _insert_content_section("Structs")
                 for struct in contract.structs:
                     content += self._generate_struct_docs(struct)
 
-            if contract.functions:
-                content += "Functions\n---------\n\n"
-                for func in contract.functions:
+            if contract.events:
+                content += _insert_content_section("Events")
+                for event in contract.events:
+                    content += event.generate_docs()
+
+            if contract.constants:
+                content += _insert_content_section("Constants")
+                for constant in contract.constants:
+                    content += constant.generate_docs()
+
+            # TODO: fix this
+            # if contract.variables:
+            #    content += _insert_content_section("Variables")
+            #    for variable in contract.variables:
+            #        content += f".. py:attribute:: {variable.name}\n\n"
+            #        content += f"   {f'public({variable.type})' if variable.visibility == 'public' else variable.type}"
+
+            if contract.external_functions:
+                content += _insert_content_section("External Functions")
+                for func in contract.external_functions:
+                    content += self._generate_function_docs(func)
+
+            if contract.internal_functions:
+                content += _insert_content_section("Internal Functions")
+                for func in contract.internal_functions:
                     content += self._generate_function_docs(func)
 
             with open(
@@ -100,8 +127,13 @@ class SphinxGenerator:
 
     @staticmethod
     def _generate_struct_docs(struct: Struct) -> str:
-        content = f".. py:class:: {func.name}\n\n"
+        content = f".. py:class:: {struct.name}\n\n"
         for field in struct.fields:
             content += f"   .. py:attribute:: {struct.name}.{field.name}\n\n"
-            content += f"      {field.type}"
+            content += f"      {field.type}\n\n"
         return content
+
+
+def _insert_content_section(name: str) -> str:
+    """Insert a hyperlinked content section accessible from the docs index."""
+    return f"{name}\n{'-' * len(name)}\n\n"
