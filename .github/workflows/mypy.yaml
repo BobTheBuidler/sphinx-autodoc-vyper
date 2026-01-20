@@ -4,29 +4,17 @@ on:
   push:
     paths:
       - '**/*.py'
-      - '**/*.pyi'
       - 'pyproject.toml'
-      - 'mypy.ini'
-      - 'setup.cfg'
       - 'setup.py'
-      - 'requirements*.txt'
       - 'tox.ini'
-      - 'poetry.lock'
-      - '.pre-commit-config.yaml'
       - '.github/workflows/mypy.yaml'
     branches: [ main ]
   pull_request:
     paths:
       - '**/*.py'
-      - '**/*.pyi'
       - 'pyproject.toml'
-      - 'mypy.ini'
-      - 'setup.cfg'
       - 'setup.py'
-      - 'requirements*.txt'
       - 'tox.ini'
-      - 'poetry.lock'
-      - '.pre-commit-config.yaml'
       - '.github/workflows/mypy.yaml'
     branches: [ main ]
 
