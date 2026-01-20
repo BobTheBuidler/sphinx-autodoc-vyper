@@ -2,8 +2,32 @@ name: Type Check
 
 on:
   push:
+    paths:
+      - '**/*.py'
+      - '**/*.pyi'
+      - 'pyproject.toml'
+      - 'mypy.ini'
+      - 'setup.cfg'
+      - 'setup.py'
+      - 'requirements*.txt'
+      - 'tox.ini'
+      - 'poetry.lock'
+      - '.pre-commit-config.yaml'
+      - '.github/workflows/mypy.yaml'
     branches: [ main ]
   pull_request:
+    paths:
+      - '**/*.py'
+      - '**/*.pyi'
+      - 'pyproject.toml'
+      - 'mypy.ini'
+      - 'setup.cfg'
+      - 'setup.py'
+      - 'requirements*.txt'
+      - 'tox.ini'
+      - 'poetry.lock'
+      - '.pre-commit-config.yaml'
+      - '.github/workflows/mypy.yaml'
     branches: [ main ]
 
 jobs:
@@ -14,7 +38,7 @@ jobs:
     - uses: actions/checkout@v6
     
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v4
       with:
         python-version: "3.11"
         
