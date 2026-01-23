@@ -3,8 +3,22 @@ name: Tests
 on:
   push:
     branches: [ main ]
+    paths:
+      - '.github/workflows/test.yaml'
+      - 'sphinx_autodoc_vyper/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'setup.py'
+      - 'tox.ini'
   pull_request:
     branches: [ main ]
+    paths:
+      - '.github/workflows/test.yaml'
+      - 'sphinx_autodoc_vyper/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'setup.py'
+      - 'tox.ini'
 
 jobs:
   test:
