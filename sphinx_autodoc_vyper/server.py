@@ -2,7 +2,6 @@
 
 import http.server
 import os
-import socketserver
 import webbrowser
 from pathlib import Path
 from typing import NoReturn
@@ -20,9 +19,10 @@ def serve_docs(build_dir: Path, port: int = 8000) -> NoReturn:  # type: ignore [
 
     os.chdir(html_dir)
 
-    handler = http.server.SimpleHTTPRequestHandler
-
-    with socketserver.TCPServer(("", port), handler) as httpd:
+    with http.server.HTTPServer(
+        ("", port),
+        http.server.SimpleHTTPRequestHandler,
+    ) as httpd:
         url = f"http://localhost:{port}"
         print(f"Serving documentation at {url}")
         webbrowser.open(url)

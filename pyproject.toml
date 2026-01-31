@@ -74,5 +74,5 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=sphinx_autodoc_vyper"
+addopts = "-ra -q --cov=sphinx_autodoc_vyper -vv"
 testpaths = ["tests"]

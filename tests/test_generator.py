@@ -3,7 +3,17 @@
 from pathlib import Path
 
 from sphinx_autodoc_vyper.generator import SphinxGenerator
-from sphinx_autodoc_vyper.parser import VyperParser
+from sphinx_autodoc_vyper.parser import (
+    Constant,
+    Contract,
+    Enum,
+    Event,
+    Function,
+    Parameter,
+    Struct,
+    Variable,
+    VyperParser,
+)
 
 
 def test_sphinx_generation(contracts_dir: Path, output_dir: Path) -> None:
@@ -73,3 +83,118 @@ def test_contract_rst_generation(contracts_dir: Path, output_dir: Path) -> None:
     # Check docstrings
     assert "Transfer tokens to a specified address" in content
     assert "Get the token balance of an account" in content
+
+
+def test_generate_enum_doc() -> None:
+    """Test documentation generation for Enum."""
+    enum = Enum(name="Status", values=["PENDING", "COMPLETED"])
+    expected_doc = ".. py:enum:: Status\n   :members:\n\n   PENDING\n   COMPLETED\n"
+    assert enum.generate_docs() == expected_doc
+
+
+def test_generate_constant_doc() -> None:
+    """Test documentation generation for Constant."""
+    constant = Constant(name="MAX_SUPPLY", type="uint256", value="1000000")
+    expected_doc = ".. py:data:: MAX_SUPPLY\n\n   :type: uint256\n   :value: 1000000\n"
+    assert constant.generate_docs() == expected_doc
+
+
+def test_generate_variable_doc() -> None:
+    """Test documentation generation for Variable."""
+    variable = Variable(name="owner", type="address", visibility="public")
+    generated_doc = generate_variable_doc(variable)
+    expected_doc = (
+        ".. py:attribute:: owner\n\n   :type: address\n   :visibility: public\n"
+    )
+    assert generated_doc == expected_doc
+
+
+def test_generate_struct_docs() -> None:
+    """Test struct documentation generation."""
+    struct = Struct(
+        name="MyStruct",
+        fields=[
+            Parameter(name="field1", type="uint256"),
+            Parameter(name="field2", type="address"),
+        ],
+    )
+    expected_output = (
+        ".. py:class:: MyStruct\n\n"
+        "   .. py:attribute:: MyStruct.field1\n\n"
+        "      uint256\n"
+        "   .. py:attribute:: MyStruct.field2\n\n"
+        "      address"
+    )
+    assert SphinxGenerator._generate_struct_docs(struct) == expected_output
+
+
+def test_generate_event_doc() -> None:
+    """Test documentation generation for Event."""
+    event = Event(
+        name="Transfer",
+        params=[
+            Parameter(name="from", type="address"),
+            Parameter(name="to", type="address"),
+            Parameter(name="value", type="uint256"),
+        ],
+    )
+    expected_doc = (
+        ".. py:event:: Transfer\n\n"
+        "   :param address from: \n"
+        "   :param address to: \n"
+        "   :param uint256 value: \n"
+    )
+    assert event.generate_docs() == expected_doc
+
+
+def test_generate_docs_for_contract_with_functions_and_structs() -> None:
+    """Test documentation generation for a contract with both functions and structs."""
+    contract = Contract(
+        name="TestContract",
+        path=".",
+        docstring="This is a contract docstring.",
+        structs=[
+            Struct(
+                name="MyStruct",
+                fields=[
+                    Parameter(name="field1", type="uint256"),
+                    Parameter(name="field2", type="address"),
+                ],
+            )
+        ],
+        external_functions=[
+            Function(
+                name="transfer",
+                params=[
+                    Parameter(name="to", type="address"),
+                    Parameter(name="amount", type="uint256"),
+                ],
+                return_type="bool",
+                docstring="Transfer tokens to a specified address.",
+            ),
+            Function(
+                name="balance_of",
+                params=[Parameter(name="owner", type="address")],
+                return_type="uint256",
+                docstring="Get the balance of an account.",
+            ),
+        ],
+    )
+
+    generator = SphinxGenerator(".")
+    docs = generator.generate([contract])
+
+    # Expected documentation output
+    expected_docs = (
+        ".. py:class:: MyStruct\n\n"
+        "   .. py:attribute:: MyStruct.field1\n\n"
+        "      uint256\n\n"
+        "   .. py:attribute:: MyStruct.field2\n\n"
+        "      address\n\n"
+        ".. py:function:: transfer(to: address, amount: uint256) -> bool\n\n"
+        "   Transfer tokens to a specified address.\n\n"
+        ".. py:function:: balance_of(owner: address) -> uint256\n\n"
+        "   Get the balance of an account.\n\n"
+    )
+
+    assert docs == expected_docs
